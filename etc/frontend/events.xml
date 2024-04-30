@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+	<!-- Set the store's currency code to that of the Customer -->
+	<event name="customer_login">
+		<observer name="ecinternet_sage300pricing-customer_login"
+		          instance="ECInternet\Sage300Pricing\Observer\CustomerLogin" />
+	</event>
+
+	<!-- Remove Magento tier price display (product.price.tier) -->
+	<event name="layout_generate_blocks_after">
+		<observer name="ecinternet_sage300pricing-layout_generate_blocks_after"
+		          instance="ECInternet\Sage300Pricing\Observer\LayoutGenerateBlocksAfter" />
+	</event>
+</config>

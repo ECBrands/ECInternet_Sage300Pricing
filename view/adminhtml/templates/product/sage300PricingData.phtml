@@ -1,0 +1,147 @@
+<?php
+/**
+ * Copyright (C) EC Brands Corporation - All Rights Reserved
+ * Contact Licensing@ECInternet.com for use guidelines
+ */
+declare(strict_types=1);
+?>
+
+<?php /** @var \ECInternet\Sage300Pricing\Block\Adminhtml\Sage300PricingData $block */ ?>
+<?php /** @var \Magento\Framework\Escaper $escaper */ ?>
+
+<?php
+$iccuprCollection  = $block->getIccuprCollection();
+$icpricCollection  = $block->getIcpricCollection();
+$icpricpCollection = $block->getIcpricpCollection();
+
+$iccuprHeaderKeys  = false;
+$icpricHeaderKeys  = false;
+$icpricpHeaderKeys = false;
+
+$iccuprTableFields = [];
+if ($iccuprCollection->getFirstItem()->getData()) {
+    $iccuprHeaderKeys = $iccuprCollection->getFirstItem()->getData();
+    foreach ($iccuprHeaderKeys as $headerKey => $value) {
+        $iccuprTableFields[] = $headerKey;
+    }
+}
+
+$icpricTableFields = [];
+if ($icpricCollection->getFirstItem()->getData()) {
+    $icpricHeaderKeys = $icpricCollection->getFirstItem()->getData();
+    foreach ($icpricHeaderKeys as $headerKey => $value) {
+        $icpricTableFields[] = $headerKey;
+    }
+}
+
+$icpricpTableFields = [];
+if ($icpricpCollection->getFirstItem()->getData()) {
+    $icpricpHeaderKeys = $icpricpCollection->getFirstItem()->getData();
+    foreach ($icpricpHeaderKeys as $headerKey => $value) {
+        $icpricpTableFields[] = $headerKey;
+    }
+}
+?>
+<div class="sage-pricing-section">
+    <?php if ($iccuprHeaderKeys): ?>
+        <div class="iccupr-section admin__data-grid-wrap">
+            <div class="fieldset-wrapper-title">
+                <strong>
+                    <span><?= $escaper->escapeHtml(__('ICCUPR - Contract Pricing')) ?></span>
+                </strong>
+            </div>
+            <table class="iccupr-table data-grid">
+                <thead>
+                <tr>
+                    <?php foreach ($iccuprTableFields as $field): ?>
+                        <th class="data-grid-th">
+                            <?= $escaper->escapeHtml($field) ?>
+                        </th>
+                    <?php endforeach; ?>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($iccuprCollection as $iccupr): ?>
+                    <tr class="data-row">
+                        <?php foreach ($iccuprTableFields as $field): ?>
+                            <td>
+                                <?= $escaper->escapeHtml($iccupr->getData($field)) ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($icpricHeaderKeys): ?>
+        <div class="icpric-section admin__data-grid-wrap">
+            <div class="fieldset-wrapper-title">
+                <strong>
+                    <span><?= $escaper->escapeHtml(__('ICPRIC - Item Pricing')) ?></span>
+                </strong>
+            </div>
+            <table class="icpric-table data-grid">
+                <thead>
+                <tr>
+                    <?php foreach ($icpricTableFields as $field): ?>
+                        <th class="data-grid-th">
+                            <?= $escaper->escapeHtml($field) ?>
+                        </th>
+                    <?php endforeach; ?>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($icpricCollection as $icpric): ?>
+                    <tr class="data-row">
+                        <?php foreach ($icpricTableFields as $field): ?>
+                            <td>
+                                <?= $escaper->escapeHtml($icpric->getData($field)) ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($icpricpHeaderKeys): ?>
+        <div class="icpricp-section admin__data-grid-wrap">
+            <div class="fieldset-wrapper-title">
+                <strong>
+                    <span><?= $escaper->escapeHtml(__('ICPRICP - Item Pricing Details')) ?></span>
+                </strong>
+            </div>
+            <table class="icpricp-table data-grid">
+                <thead>
+                <tr>
+                    <?php foreach ($icpricpTableFields as $field): ?>
+                        <th class="data-grid-th">
+                            <?= $escaper->escapeHtml($field) ?>
+                        </th>
+                    <?php endforeach; ?>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($icpricpCollection as $icpricp): ?>
+                    <tr class="data-row">
+                        <?php foreach ($icpricpTableFields as $field): ?>
+                            <td>
+                                <?= $escaper->escapeHtml($icpricp->getData($field)) ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
+    .product_form_product_form_sagepricing_modal .admin__field-complex-content {
+        max-width: 90% !important;
+    }
+</style>

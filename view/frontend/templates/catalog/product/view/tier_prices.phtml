@@ -1,0 +1,23 @@
+<?php
+/**
+ * Copyright (C) EC Brands Corporation - All Rights Reserved
+ * Contact Licensing@ECInternet.com for use guidelines
+ */
+declare(strict_types=1);
+?>
+
+<?php /** @var \ECInternet\Sage300Pricing\Block\Catalog\Product\View $block */ ?>
+<?php /** @var \Magento\Framework\Escaper $escaper */ ?>
+
+<?php if ($block->showTierPriceBlock()) { ?>
+    <?php $tierPrices = $block->getTierPrices(); ?>
+
+    <?php if (count($tierPrices)) { ?>
+        <h2><?= __($block->getTierPriceHeaderTitle()) ?></h2>
+        <ul>
+        <?php foreach ($tierPrices as $tierPrice) { ?>
+            <li><?= __($block->getTierPriceDiscountMessage($tierPrice)) ?></li>
+        <?php } ?>
+        </ul>
+    <?php } ?>
+<?php } ?>

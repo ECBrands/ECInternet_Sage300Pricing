@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+	<!-- ICCUPR -->
+	<route url="/V1/sage300pricing/iccupr/save" method="POST">
+		<service class="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface" method="save" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/iccupr/bulk-save" method="POST">
+		<service class="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface" method="bulkSave" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/iccupr/get" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface" method="get" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/iccupr/:id" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface" method="getById" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/iccupr/getList" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface" method="getList" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/iccupr/:id" method="DELETE">
+		<service class="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface" method="deleteById" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+
+	<!-- ICPRIC -->
+	<route url="/V1/sage300pricing/icpric/save" method="POST">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface" method="save" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpric/bulk-save" method="POST">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface" method="bulkSave" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpric/get" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface" method="get" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpric/:id" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface" method="getById" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpric/getList" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface" method="getList" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpric/:id" method="DELETE">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface" method="deleteById" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+
+	<!-- ICPRICP -->
+	<route url="/V1/sage300pricing/icpricp/save" method="POST">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface" method="save" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpricp/bulk-save" method="POST">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface" method="bulkSave" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpricp/get" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface" method="get" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpricp/:id" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface" method="getById" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpricp/getList" method="GET">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface" method="getList" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+	<route url="/V1/sage300pricing/icpricp/:id" method="DELETE">
+		<service class="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface" method="deleteById" />
+		<resources>
+			<resource ref="anonymous" />
+		</resources>
+	</route>
+</routes>

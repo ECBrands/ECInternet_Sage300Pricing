@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<type name="Magento\Sales\Block\Adminhtml\Items\AbstractItems">
+		<plugin name="ecinternet_sage300pricing-magento_sales_block_adminhtml_items_abstractitems"
+		        type="ECInternet\Sage300Pricing\Plugin\Magento\Sales\Block\Adminhtml\Items\AbstractItemsPlugin" />
+	</type>
+
+	<!-- Fixes the display of multiple prices when Sage 300 Pricing is used in a multi-currency store -->
+	<type name="Magento\Sales\Helper\Admin">
+		<plugin name="ecinternet_sage300pricing-magento_sales_helper_admin"
+		        type="ECInternet\Sage300Pricing\Plugin\Magento\Sales\Helper\AdminPlugin" />
+	</type>
+
+	<!-- Add pricing grid to form -->
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="sagePricingModifier" xsi:type="array">
+                    <item name="class" xsi:type="string">ECInternet\Sage300Pricing\Ui\DataProvider\Product\Form\Modifier\SagePricing</item>
+                    <item name="sortOrder" xsi:type="number">71</item>     
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

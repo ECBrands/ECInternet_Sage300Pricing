@@ -1,0 +1,141 @@
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">icpricp_listing.icpricp_listing_data_source</item>
+		</item>
+	</argument>
+	<settings>
+		<!-- Takes values from <columns> tag below -->
+		<spinner>icpricp_data_columns</spinner>
+		<deps>
+			<dep>icpricp_listing.icpricp_listing_data_source</dep>
+		</deps>
+	</settings>
+
+	<!-- Define data source for listing page -->
+	<dataSource name="icpricp_listing_data_source" component="Magento_Ui/js/grid/provider">
+		<settings>
+			<storageConfig>
+				<!-- indexField: primary index column name from our database table -->
+				<param name="indexField" xsi:type="string">entity_id</param>
+			</storageConfig>
+			<updateUrl path="mui/index/render" />
+		</settings>
+
+		<dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="icpricp_listing_data_source">
+			<settings>
+				<!-- Name of the request parameter -->
+				<requestFieldName>entity_id</requestFieldName>
+				<!-- Name of the main index in our database table -->
+				<primaryFieldName>entity_id</primaryFieldName>
+			</settings>
+		</dataProvider>
+	</dataSource>
+
+	<listingToolbar name="listing_top">
+		<settings>
+			<sticky>true</sticky>
+		</settings>
+
+		<!-- Used for remembering current state of view like applied filters, pagination, visible columns, etc -->
+		<bookmark name="bookmarks" />
+
+		<!-- Displays a special selector which allows the user to select which columns of our table should be presented or not -->
+		<columnsControls name="columns_controls" />
+
+		<!-- Add a full-text search. This enabled "Search by keyword" -->
+		<filterSearch name="fulltext" />
+
+		<!-- Add pagination -->
+		<paging name="listing_paging" />
+
+		<!-- Add filters for searching by specific fields -->
+		<filters name="listing_filters" />
+	</listingToolbar>
+
+	<!-- Define listing 'columns' -->
+	<columns name="icpricp_data_columns">
+		<column name="entity_id" sortOrder="10">
+			<settings>
+				<filter>textRange</filter>
+				<dataType>number</dataType>
+				<label translate="true">ID</label>
+				<sorting>asc</sorting>
+			</settings>
+		</column>
+
+		<column name="is_active" component="Magento_Ui/js/grid/columns/select" sortOrder="40">
+			<settings>
+				<filter>select</filter>
+				<dataType>select</dataType>
+				<options class="Magento\Config\Model\Config\Source\Yesno" />
+				<label translate="true">Is Active?</label>
+			</settings>
+		</column>
+
+		<column name="CURRENCY" sortOrder="50">
+			<settings>
+				<filter>text</filter>
+				<dataType>text</dataType>
+				<label translate="true">Currency</label>
+			</settings>
+		</column>
+
+		<column name="ITEMNO" sortOrder="60">
+			<settings>
+				<filter>text</filter>
+				<dataType>text</dataType>
+				<label translate="true">Item Number</label>
+			</settings>
+		</column>
+
+		<column name="PRICELIST" sortOrder="70">
+			<settings>
+				<filter>text</filter>
+				<dataType>text</dataType>
+				<label translate="true">Price List Code</label>
+			</settings>
+		</column>
+
+		<column name="DPRICETYPE" sortOrder="80">
+			<settings>
+				<filter>text</filter>
+				<dataType>number</dataType>
+				<label translate="true">Price Detail Type</label>
+			</settings>
+		</column>
+
+		<column name="QTYUNIT" sortOrder="90">
+			<settings>
+				<filter>text</filter>
+				<dataType>text</dataType>
+				<label translate="true">Quantity Unit of Measure</label>
+			</settings>
+		</column>
+
+		<column name="WEIGHTUNIT" sortOrder="100">
+			<settings>
+				<filter>text</filter>
+				<dataType>text</dataType>
+				<label translate="true">Weight Unit of Measure</label>
+			</settings>
+		</column>
+
+		<column name="UNITPRICE" sortOrder="110">
+			<settings>
+				<filter>text</filter>
+				<dataType>number</dataType>
+				<label translate="true">Unit Price</label>
+			</settings>
+		</column>
+
+		<column name="CONVERSION" sortOrder="120">
+			<settings>
+				<filter>text</filter>
+				<dataType>number</dataType>
+				<label translate="true">Conversion Factor</label>
+			</settings>
+		</column>
+	</columns>
+</listing>

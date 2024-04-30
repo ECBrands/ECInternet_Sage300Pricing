@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<!-- ICCUPR -->
+	<preference for="ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface"
+	            type="ECInternet\Sage300Pricing\Model\IccuprRepository" />
+	<preference for="ECInternet\Sage300Pricing\Api\Data\IccuprInterface"
+	            type="ECInternet\Sage300Pricing\Model\Data\Iccupr" />
+	<preference for="ECInternet\Sage300Pricing\Api\Data\IccuprSearchResultsInterface"
+	            type="ECInternet\Sage300Pricing\Model\Data\IccuprSearchResults" />
+
+	<!-- ICPRIC -->
+	<preference for="ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface"
+	            type="ECInternet\Sage300Pricing\Model\IcpricRepository" />
+	<preference for="ECInternet\Sage300Pricing\Api\Data\IcpricInterface"
+	            type="ECInternet\Sage300Pricing\Model\Data\Icpric" />
+	<preference for="ECInternet\Sage300Pricing\Api\Data\IcpricSearchResultsInterface"
+	            type="ECInternet\Sage300Pricing\Model\Data\IcpricSearchResults" />
+
+	<!-- ICPRICP -->
+	<preference for="ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface"
+	            type="ECInternet\Sage300Pricing\Model\IcpricpRepository" />
+	<preference for="ECInternet\Sage300Pricing\Api\Data\IcpricpInterface"
+	            type="ECInternet\Sage300Pricing\Model\Data\Icpricp" />
+	<preference for="ECInternet\Sage300Pricing\Api\Data\IcpricpSearchResultsInterface"
+	            type="ECInternet\Sage300Pricing\Model\Data\IcpricpSearchResults" />
+
+	<!-- beforeGetVaryString() - Add 'customer_number' for unique identifier -->
+	<type name="Magento\Framework\App\Http\Context">
+		<plugin name="ecinternet_sage300pricing-magento_framework_app_http_context_plugin"
+		        type="ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http\ContextPlugin"
+		        disabled="false"
+		/>
+	</type>
+
+	<!-- aroundGetUom() - Get "better" uom if we have pricing tables -->
+	<type name="ECInternet\Sage300Account\Block\Reorder\ReorderList">
+		<plugin name="ecinternet_sage300pricing-sage300account_block_reorder_reorderlist_plugin"
+		        type="ECInternet\Sage300Pricing\Plugin\ECInternet\Sage300Account\Block\Reorder\ReorderListPlugin"
+		        disabled="false"
+		/>
+	</type>
+
+	<!-- Add sage300pricing to pool -->
+	<type name="ECInternet\Pricing\Model\PricingSystemPool">
+		<arguments>
+			<argument name="pricingSystems" xsi:type="array">
+				<item name="sage300" xsi:type="object">ECInternet\Sage300Pricing\Pricing\Sage300</item>
+			</argument>
+		</arguments>
+	</type>
+
+	<!-- Custom Logger -->
+	<type name="ECInternet\Sage300Pricing\Logger\Logger">
+		<arguments>
+			<argument name="name" xsi:type="string">Sage300Pricing</argument>
+			<argument name="handlers" xsi:type="array">
+				<item name="system" xsi:type="object">ECInternet\Sage300Pricing\Logger\Handler</item>
+			</argument>
+		</arguments>
+	</type>
+
+	<!-- Add ICCUPR, ICPRIC, and ICPRICP collections -->
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="iccupr_listing_data_source" xsi:type="string">IccuprCollection</item>
+				<item name="icpric_listing_data_source" xsi:type="string">IcpricCollection</item>
+				<item name="icpricp_listing_data_source" xsi:type="string">IcpricpCollection</item>
+			</argument>
+		</arguments>
+	</type>
+	<virtualType name="IccuprCollection"
+	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ecinternet_sage300pricing_iccupr</argument>
+			<argument name="resourceModel" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="IcpricCollection"
+	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ecinternet_sage300pricing_icpric</argument>
+			<argument name="resourceModel" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Icpric</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="IcpricpCollection"
+	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ecinternet_sage300pricing_icpricp</argument>
+			<argument name="resourceModel" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp</argument>
+		</arguments>
+	</virtualType>
+</config>

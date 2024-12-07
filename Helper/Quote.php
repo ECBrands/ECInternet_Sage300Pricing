@@ -81,13 +81,8 @@ class Quote extends AbstractHelper
      */
     private function getCurrentQuote()
     {
-        //$this->log('getCurrentQuote()');
-
         if ($quote = $this->getCurrentFrontendQuote()) {
-            $this->log('getCurrentQuote() - Found frontend quote.');
-            if ($quoteId = $quote->getId()) {
-                $this->log("getCurrentQuote() - Found frontend quote [$quoteId]");
-
+            if ($quote->getId()) {
                 return $quote;
             } else {
                 $this->log('getCurrentQuote() - Frontend quote did not have Id, testing backend quote...');
@@ -97,10 +92,7 @@ class Quote extends AbstractHelper
         }
 
         if ($quote = $this->getCurrentBackendQuote()) {
-            $this->log('getCurrentQuote() - Found backend quote.');
-            if ($quoteId = $quote->getId()) {
-                $this->log("getCurrentQuote() - Found backend quote [$quoteId]");
-
+            if ($quote->getId()) {
                 return $quote;
             } else {
                 $this->log('getCurrentQuote() - Backend quote did not have Id, returning null.');

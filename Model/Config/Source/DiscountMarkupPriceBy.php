@@ -11,9 +11,6 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class DiscountMarkupPriceBy implements OptionSourceInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function toOptionArray()
     {
         return [

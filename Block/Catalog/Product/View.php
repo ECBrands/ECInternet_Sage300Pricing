@@ -21,9 +21,9 @@ use Magento\Framework\Stdlib\StringUtils;
 use Magento\Framework\Url\EncoderInterface as UrlEncoderInterface;
 use ECInternet\Sage300Account\Helper\Data as Sage300AccountHelper;
 use ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface;
-use ECInternet\Sage300Pricing\Helper\Customer as CustomerHelper;
 use ECInternet\Sage300Pricing\Helper\Data;
 use ECInternet\Sage300Pricing\Logger\Logger;
+use ECInternet\Sage300Pricing\Model\Config;
 use Exception;
 
 /**
@@ -47,11 +47,6 @@ class View extends \Magento\Catalog\Block\Product\View
     private $icpricRepository;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Helper\Customer
-     */
-    private $customerHelper;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Helper\Data
      */
     private $helper;
@@ -60,6 +55,11 @@ class View extends \Magento\Catalog\Block\Product\View
      * @var \ECInternet\Sage300Pricing\Logger\Logger
      */
     private $logger;
+
+    /**
+     * @var \ECInternet\Sage300Pricing\Model\Config
+     */
+    private $config;
 
     /**
      * View constructor.
@@ -78,8 +78,8 @@ class View extends \Magento\Catalog\Block\Product\View
      * @param \ECInternet\Sage300Account\Helper\Data                   $sage300AccountHelper
      * @param \ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface $icpricRepository
      * @param \ECInternet\Sage300Pricing\Helper\Data                   $helper
-     * @param \ECInternet\Sage300Pricing\Helper\Customer               $customerHelper
      * @param \ECInternet\Sage300Pricing\Logger\Logger                 $logger
+     * @param \ECInternet\Sage300Pricing\Model\Config                  $config
      * @param array                                                    $data
      */
     public function __construct(
@@ -97,8 +97,8 @@ class View extends \Magento\Catalog\Block\Product\View
         Sage300AccountHelper $sage300AccountHelper,
         IcpricRepositoryInterface $icpricRepository,
         Data $helper,
-        CustomerHelper $customerHelper,
         Logger $logger,
+        Config $config,
         array $data = []
     ) {
         parent::__construct(
@@ -121,9 +121,9 @@ class View extends \Magento\Catalog\Block\Product\View
         $this->customerRepository   = $customerRepository;
         $this->sage300AccountHelper = $sage300AccountHelper;
         $this->icpricRepository     = $icpricRepository;
-        $this->customerHelper       = $customerHelper;
         $this->helper               = $helper;
         $this->logger               = $logger;
+        $this->config               = $config;
     }
 
     /**
@@ -133,7 +133,7 @@ class View extends \Magento\Catalog\Block\Product\View
      */
     public function showTierPriceBlock()
     {
-        return $this->helper->isModuleEnabled();
+        return $this->config->isModuleEnabled();
     }
 
     public function getTierPriceHeaderTitle()
@@ -217,7 +217,7 @@ class View extends \Magento\Catalog\Block\Product\View
     {
         $this->log('getCurrencyCode()');
 
-        return $this->customerHelper->getCurrentStoreCurrencyCode();
+        return $this->helper->getCurrentStoreCurrencyCode();
     }
 
     private function getPricelist()
@@ -230,7 +230,7 @@ class View extends \Magento\Catalog\Block\Product\View
                 try {
                     return $this->sage300AccountHelper->getCustomerGroupCode((int)$customerGroupId);
                 } catch (Exception $e) {
-                    $this->log('getPricelist()', ['error' => $e->getMessage()]);
+                    $this->log('getPricelist()', ['exception' => $e->getMessage()]);
                 }
             }
         }

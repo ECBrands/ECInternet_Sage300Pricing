@@ -9,6 +9,9 @@
 			<display>
 				<admin_pricing_title>Sage 300 Pricing Data</admin_pricing_title>
 			</display>
+			<calculation>
+				<use_lowest_price>1</use_lowest_price>
+			</calculation>
 		</sage300pricing>
 	</default>
 </config>

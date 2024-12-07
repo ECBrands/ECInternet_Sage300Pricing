@@ -77,7 +77,7 @@ class IccuprRepository implements IccuprRepositoryInterface
     public function save(
         IccuprInterface $iccupr
     ) {
-        $this->log('save()', ['iccupr' => $iccupr->getData()]);
+        //$this->log('save()', ['iccupr' => $iccupr->getData()]);
 
         $this->validate($iccupr);
 
@@ -105,12 +105,12 @@ class IccuprRepository implements IccuprRepositoryInterface
     public function bulkSave(
         array $iccuprArray
     ) {
-        $this->log('bulkSave()');
+        //$this->log('bulkSave()');
 
         $results = [];
 
         foreach ($iccuprArray as $iccupr) {
-            $this->log('bulkSave()', ['iccupr' => $iccupr->getData()]);
+            //$this->log('bulkSave()', ['iccupr' => $iccupr->getData()]);
 
             try {
                 $this->save($iccupr);
@@ -129,11 +129,11 @@ class IccuprRepository implements IccuprRepositoryInterface
         string $itemNumber,
         string $pricelist
     ) {
-        $this->log('get()', [
-            'customerNumber' => $customerNumber,
-            'itemNumber'     => $itemNumber,
-            'pricelist'      => $pricelist
-        ]);
+        //$this->log('get()', [
+        //    'customerNumber' => $customerNumber,
+        //    'itemNumber'     => $itemNumber,
+        //    'pricelist'      => $pricelist
+        //]);
 
         if ($customerNumber == null) {
             $this->log("get() - Blank 'customerNumber'");
@@ -162,10 +162,10 @@ class IccuprRepository implements IccuprRepositoryInterface
             ->addFieldToFilter(Iccupr::COLUMN_PRICELIST, ['eq' => $pricelist]);
 
         $collectionCount = $collection->getSize();
-        $this->log('get()', [
-            'select'          => $collection->getSelect(),
-            'collectionCount' => $collectionCount
-        ]);
+        //$this->log('get()', [
+        //    'select'          => $collection->getSelect(),
+        //    'collectionCount' => $collectionCount
+        //]);
 
         // If we find no records, log it and return.
         if ($collectionCount === 0) {
@@ -297,11 +297,13 @@ class IccuprRepository implements IccuprRepositoryInterface
     protected function doesRecordExist(
         IccuprInterface $iccupr
     ) {
+        /*
         $this->log('doesRecordExist()', [
             Iccupr::COLUMN_CUSTNO    => $iccupr->getCustomerNumber(),
             Iccupr::COLUMN_ITEMNO    => $iccupr->getItemNumber(),
             Iccupr::COLUMN_PRICELIST => $iccupr->getPriceList()
         ]);
+        */
 
         /** @var \ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr\Collection $collection */
         $collection = $this->iccuprCollectionFactory->create()

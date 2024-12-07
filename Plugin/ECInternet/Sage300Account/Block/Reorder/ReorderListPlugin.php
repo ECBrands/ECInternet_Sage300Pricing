@@ -11,7 +11,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use ECInternet\Sage300Account\Block\Reorder\ReorderList;
-use ECInternet\Sage300Account\Helper\Data;
+use ECInternet\Sage300Account\Helper\Uom as UomHelper;
 use ECInternet\Sage300Account\Logger\Logger;
 use ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface;
 
@@ -25,9 +25,9 @@ class ReorderListPlugin
     private $storeManager;
 
     /**
-     * @var \ECInternet\Sage300Account\Helper\Data
+     * @var \ECInternet\Sage300Account\Helper\Uom
      */
-    private $helper;
+    private $uomHelper;
 
     /**
      * @var \ECInternet\Sage300Account\Logger\Logger
@@ -40,19 +40,21 @@ class ReorderListPlugin
     private $icpricpRepository;
 
     /**
+     * ReorderListPlugin constructor.
+     *
      * @param \Magento\Store\Model\StoreManagerInterface                $storeManager
-     * @param \ECInternet\Sage300Account\Helper\Data                    $helper
+     * @param \ECInternet\Sage300Account\Helper\Uom                     $uomHelper
      * @param \ECInternet\Sage300Account\Logger\Logger                  $logger
      * @param \ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface $icpricpRepository
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        Data $helper,
+        UomHelper $uomHelper,
         Logger $logger,
         IcpricpRepositoryInterface $icpricpRepository
     ) {
         $this->storeManager      = $storeManager;
-        $this->helper            = $helper;
+        $this->uomHelper         = $uomHelper;
         $this->logger            = $logger;
         $this->icpricpRepository = $icpricpRepository;
     }
@@ -106,10 +108,9 @@ class ReorderListPlugin
         return self::DEFAULT_CURRENCY_CODE;
     }
 
-    private function getUomLabel($uom)
+    private function getUomLabel(string $uom)
     {
-        $translatedUom = $this->helper->translateUom($uom);
-        if (!empty($translatedUom)) {
+        if ($translatedUom = $this->uomHelper->translateUom($uom)) {
             return $translatedUom;
         }
 

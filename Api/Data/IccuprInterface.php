@@ -152,13 +152,15 @@ interface IccuprInterface
     public function setPriceType(int $priceType);
 
     /**
-     * Get Customer Type
+     * Get Customer Type - CUSTTYPE
      *
      * @return int
      */
     public function getCustomerType();
 
     /**
+     * Set Customer Type - CUSTTYPE
+     *
      * @param int $customerType
      *
      * @return void

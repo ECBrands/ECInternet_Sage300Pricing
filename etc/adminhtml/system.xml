@@ -25,7 +25,14 @@
 					<label>Admin Pricing Table Title</label>
 				</field>
 			</group>
-			<group id="group_prices" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+			<group id="calculation" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+				<label>Price Calculation</label>
+				<field id="use_lowest_price" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Use lowest price?</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+			</group>
+			<group id="group_prices" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
 				<label>Group Prices</label>
 				<field id="guest_pricegroup" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
 					<label>Guest Price Group</label>
@@ -33,7 +40,7 @@
 					<source_model>Magento\Customer\Model\Config\Source\Group\Multiselect</source_model>
 				</field>
 			</group>
-			<group id="tier_prices" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+			<group id="tier_prices" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
 				<label>Tier Prices</label>
 				<field id="show_tiers" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
 					<label>Display Tier Prices on Frontend</label>

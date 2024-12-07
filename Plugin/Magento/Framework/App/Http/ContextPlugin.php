@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Customer\Model\SessionFactory as CustomerSessionFactory;
 use Magento\Framework\App\Http\Context;
 use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
@@ -26,9 +26,9 @@ class ContextPlugin
     private $customerRepository;
 
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var \Magento\Customer\Model\SessionFactory
      */
-    private $customerSession;
+    private $customerSessionFactory;
 
     /**
      * @var \ECInternet\Sage300Pricing\Logger\Logger
@@ -36,27 +36,28 @@ class ContextPlugin
     private $logger;
 
     /**
+     * ContextPlugin constructor.
+     *
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
-     * @param \Magento\Customer\Model\Session                   $customerSession
+     * @param \Magento\Customer\Model\SessionFactory            $customerSessionFactory
      * @param \ECInternet\Sage300Pricing\Logger\Logger          $logger
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
-        CustomerSession $customerSession,
+        CustomerSessionFactory $customerSessionFactory,
         Logger $logger
     ) {
-        $this->customerRepository = $customerRepository;
-        $this->customerSession = $customerSession;
-        $this->logger          = $logger;
+        $this->customerRepository     = $customerRepository;
+        $this->customerSessionFactory = $customerSessionFactory;
+        $this->logger                 = $logger;
     }
+
     public function beforeGetVaryString(Context $subject)
     {
         if ($customerNumber = $this->getCustomerNumber()) {
             $this->log('beforeGetVaryString()', ['customer_number' => $customerNumber]);
 
             $subject->setValue('CONTEXT_CUSTOMER_NUMBER', $customerNumber, 0);
-        } else {
-            $this->log('beforeGetVaryString()', ['customer_number' => 'null']);
         }
     }
 
@@ -70,11 +71,7 @@ class ContextPlugin
         if ($customer = $this->getCustomer()) {
             if ($customerNumberAttribute = $customer->getCustomAttribute(self::CUSTOMER_ATTRIBUTE_CUSTOMER_NUMBER)) {
                 return (string)$customerNumberAttribute->getValue();
-            } else {
-                $this->log('getCustomerNumber()', ['exception' => 'customer_number attribute not found']);
             }
-        } else {
-            $this->log('getCustomerNumber()', ['exception' => 'customerData is null']);
         }
 
         return null;
@@ -85,11 +82,14 @@ class ContextPlugin
      */
     private function getCustomer()
     {
-        if ($customerId = $this->customerSession->getCustomerId()) {
+        if ($customerId = $this->customerSessionFactory->create()->getCustomerId()) {
             try {
                 return $this->customerRepository->getById($customerId);
             } catch (Exception $e) {
-                $this->log('getCustomer()', ['exception' => $e->getMessage()]);
+                $this->log('getCustomer()', [
+                    'customerId' => $customerId,
+                    'exception'  => $e->getMessage()
+                ]);
             }
         } else {
             $this->log('getCustomer() - customerSession->getCustomerId() is null');

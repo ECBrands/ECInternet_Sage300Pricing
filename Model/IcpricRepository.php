@@ -77,7 +77,7 @@ class IcpricRepository implements IcpricRepositoryInterface
     public function save(
         IcpricInterface $icpric
     ) {
-        $this->log('save()', ['icpric' => $icpric->getData()]);
+        //$this->log('save()', ['icpric' => $icpric->getData()]);
 
         $this->validate($icpric);
 
@@ -105,12 +105,12 @@ class IcpricRepository implements IcpricRepositoryInterface
     public function bulkSave(
         array $icpricArray
     ) {
-        $this->log('bulkSave()');
+        //$this->log('bulkSave()');
 
         $results = [];
 
         foreach ($icpricArray as $icpric) {
-            $this->log('bulkSave()', ['icpric' => $icpric->getData()]);
+            //$this->log('bulkSave()', ['icpric' => $icpric->getData()]);
 
             try {
                 $this->save($icpric);
@@ -129,11 +129,11 @@ class IcpricRepository implements IcpricRepositoryInterface
         string $itemNumber,
         string $pricelist
     ) {
-        $this->log('get()', [
-            'currencyCode' => $currencyCode,
-            'itemNumber'   => $itemNumber,
-            'pricelist'    => $pricelist
-        ]);
+        //$this->log('get()', [
+        //    'currencyCode' => $currencyCode,
+        //    'itemNumber'   => $itemNumber,
+        //    'pricelist'    => $pricelist
+        //]);
 
         if (empty($currencyCode)) {
             $this->log("get() - Blank 'currencyCode'");
@@ -160,10 +160,10 @@ class IcpricRepository implements IcpricRepositoryInterface
             ->addFieldToFilter(Data\Icpric::COLUMN_PRICELIST, $pricelist);
 
         $collectionCount = $collection->getSize();
-        $this->log('get()', [
-            'select'          => $collection->getSelect(),
-            'collectionCount' => $collectionCount
-        ]);
+        //$this->log('get()', [
+        //    'select'          => $collection->getSelect(),
+        //    'collectionCount' => $collectionCount
+        //]);
 
         // If we find no records, log it and return.
         if ($collectionCount === 0) {
@@ -295,11 +295,13 @@ class IcpricRepository implements IcpricRepositoryInterface
     private function doesRecordExist(
         IcpricInterface $icpric
     ) {
+        /*
         $this->log('doesRecordExist()', [
             Data\Icpric::COLUMN_CURRENCY  => $icpric->getCurrencyCode(),
             Data\Icpric::COLUMN_ITEMNO    => $icpric->getItemNumber(),
             Data\Icpric::COLUMN_PRICELIST => $icpric->getPriceListCode()
         ]);
+        */
 
         /** @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpric\Collection $collection */
         $collection = $this->icpricCollectionFactory->create()

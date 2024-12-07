@@ -100,8 +100,9 @@
 
 		<column name="DPRICETYPE" sortOrder="80">
 			<settings>
-				<filter>text</filter>
-				<dataType>number</dataType>
+				<filter>select</filter>
+				<dataType>select</dataType>
+				<options class="ECInternet\Sage300Pricing\Model\Config\Source\PriceDetailType" />
 				<label translate="true">Price Detail Type</label>
 			</settings>
 		</column>

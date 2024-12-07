@@ -14,7 +14,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Framework\View\LayoutFactory;
 use Magento\Ui\Component\Container;
 use Magento\Ui\Component\Modal;
-use ECInternet\Sage300Pricing\Helper\Data;
+use ECInternet\Sage300Pricing\Model\Config;
 
 /**
  * SagePricing data provider
@@ -30,27 +30,27 @@ class SagePricing extends AbstractModifier
     /**
      * @var \Magento\Catalog\Model\Locator\LocatorInterface
      */
-    private $_locator;
+    private $locator;
 
     /**
      * @var \Magento\Framework\UrlInterface
      */
-    private $_urlBuilder;
+    private $urlBuilder;
 
     /**
      * @var \Magento\Framework\View\LayoutFactory
      */
-    private $_layoutFactory;
+    private $layoutFactory;
+
+    /**
+     * @var \ECInternet\Sage300Pricing\Model\Config
+     */
+    private $config;
 
     /**
      * @var array
      */
-    private $_meta = [];
-
-    /**
-     * @var \ECInternet\Sage300Pricing\Helper\Data
-     */
-    private $_helper;
+    private $meta = [];
 
     /**
      * SagePricing constructor.
@@ -58,18 +58,18 @@ class SagePricing extends AbstractModifier
      * @param \Magento\Catalog\Model\Locator\LocatorInterface $locator
      * @param \Magento\Framework\UrlInterface                 $urlBuilder
      * @param \Magento\Framework\View\LayoutFactory           $layoutFactory
-     * @param \ECInternet\Sage300Pricing\Helper\Data          $helper
+     * @param \ECInternet\Sage300Pricing\Model\Config         $config
      */
     public function __construct(
         LocatorInterface $locator,
         UrlInterface $urlBuilder,
         LayoutFactory $layoutFactory,
-        Data $helper
+        Config $config
     ) {
-        $this->_locator       = $locator;
-        $this->_urlBuilder    = $urlBuilder;
-        $this->_layoutFactory = $layoutFactory;
-        $this->_helper        = $helper;
+        $this->locator       = $locator;
+        $this->urlBuilder    = $urlBuilder;
+        $this->layoutFactory = $layoutFactory;
+        $this->config        = $config;
     }
 
     /**
@@ -85,14 +85,14 @@ class SagePricing extends AbstractModifier
      */
     public function modifyMeta(array $meta)
     {
-        $this->_meta = $meta;
+        $this->meta = $meta;
 
-        if ($this->_helper->isModuleEnabled()) {
+        if ($this->config->isModuleEnabled()) {
             $this->addSagePricingModal();
             $this->addSagePricingModalLink(50);
         }
 
-        return $this->_meta;
+        return $this->meta;
     }
 
     /**
@@ -102,8 +102,8 @@ class SagePricing extends AbstractModifier
      */
     private function addSagePricingModal()
     {
-        $this->_meta = array_merge_recursive(
-            $this->_meta,
+        $this->meta = array_merge_recursive(
+            $this->meta,
             [
                 static::SAGEPRICING_MODAL_INDEX => $this->getModalConfig(),
             ]
@@ -154,11 +154,11 @@ class SagePricing extends AbstractModifier
                                 'dataScope'          => 'data.product', // save data in the product data
                                 'externalProvider'   => 'data.product_data_source',
                                 'ns'                 => static::FORM_NAME,
-                                'render_url'         => $this->_urlBuilder->getUrl('mui/index/render'),
+                                'render_url'         => $this->urlBuilder->getUrl('mui/index/render'),
                                 'realTimeLink'       => true,
                                 'behaviourType'      => 'edit',
                                 'externalFilterMode' => true,
-                                'currentProductId'   => $this->_locator->getProduct()->getId(),
+                                'currentProductId'   => $this->locator->getProduct()->getId(),
                             ],
                         ],
                     ],
@@ -188,7 +188,7 @@ class SagePricing extends AbstractModifier
                         'componentType' => Container::NAME,
                         'template'      => 'ui/form/components/complex',
                         'sortOrder'     => $sortOrder,
-                        'content'       => $this->_layoutFactory->create()->createBlock(
+                        'content'       => $this->layoutFactory->create()->createBlock(
                             'ECInternet\Sage300Pricing\Block\Adminhtml\Sage300PricingData'
                         )->toHtml(),
                     ],
@@ -205,8 +205,8 @@ class SagePricing extends AbstractModifier
      */
     private function addSagePricingModalLink(int $sortOrder)
     {
-        $this->_meta = array_replace_recursive(
-            $this->_meta,
+        $this->meta = array_replace_recursive(
+            $this->meta,
             [
                 static::DEFAULT_GENERAL_PANEL => [
                     'children' => [
@@ -245,7 +245,7 @@ class SagePricing extends AbstractModifier
 
     private function getAdminPricingTitle()
     {
-        $value = $this->_helper->getAdminPricingTitle();
+        $value = $this->config->getAdminPricingTitle();
 
         return empty($value) ? 'Sage 300 Pricing Data' : $value;
     }

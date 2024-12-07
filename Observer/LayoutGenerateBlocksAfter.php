@@ -9,7 +9,7 @@ namespace ECInternet\Sage300Pricing\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
-use ECInternet\Sage300Pricing\Helper\Data;
+use ECInternet\Sage300Pricing\Model\Config;
 
 /**
  * Observer for 'layout_generate_blocks_after' event
@@ -17,19 +17,19 @@ use ECInternet\Sage300Pricing\Helper\Data;
 class LayoutGenerateBlocksAfter implements ObserverInterface
 {
     /**
-     * @var \ECInternet\Sage300Pricing\Helper\Data
+     * @var \ECInternet\Sage300Pricing\Model\Config
      */
-    private $helper;
+    private $config;
 
     /**
      * LayoutGenerateBlocksAfter constructor.
      *
-     * @param \ECInternet\Sage300Pricing\Helper\Data $helper
+     * @param \ECInternet\Sage300Pricing\Model\Config $config
      */
     public function __construct(
-        Data $helper
+        Config $config
     ) {
-        $this->helper = $helper;
+        $this->config = $config;
     }
 
     /**
@@ -39,7 +39,7 @@ class LayoutGenerateBlocksAfter implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if ($this->helper->shouldShowTierPrices()) {
+        if ($this->config->shouldShowTierPrices()) {
             if ($layout = $observer->getData('layout')) {
                 $layout->unsetElement('product.price.tier');
             }

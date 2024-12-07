@@ -11,9 +11,6 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class PriceDeterminedBy implements OptionSourceInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function toOptionArray()
     {
         return [

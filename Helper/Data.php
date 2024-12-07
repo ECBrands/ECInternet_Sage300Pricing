@@ -8,6 +8,10 @@ declare(strict_types=1);
 namespace ECInternet\Sage300Pricing\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Store\Model\StoreManagerInterface;
+use ECInternet\Sage300Pricing\Logger\Logger;
+use Exception;
 
 /**
  * Helper
@@ -16,34 +20,52 @@ use Magento\Framework\App\Helper\AbstractHelper;
  */
 class Data extends AbstractHelper
 {
-    const CONFIG_PATH_ENABLED               = 'sage300pricing/general/enable';
-
-    const CONFIG_PATH_ADMIN_PRICING_DISPLAY = 'sage300pricing/display/admin_pricing_title';
-
-    const CONFIG_PATH_SHOW_TIER_PRICES      = 'sage300pricing/tier_prices/show_tiers';
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    private $storeManager;
 
     /**
-     * Is module enabled?
-     *
-     * @return bool
+     * @var \ECInternet\Sage300Pricing\Logger\Logger
      */
-    public function isModuleEnabled()
-    {
-        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_ENABLED);
-    }
+    private $logger;
 
-    public function getAdminPricingTitle()
-    {
-        return (string)$this->scopeConfig->getValue(self::CONFIG_PATH_ADMIN_PRICING_DISPLAY);
+    /**
+     * Data constructor.
+     *
+     * @param \Magento\Framework\App\Helper\Context      $context
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \ECInternet\Sage300Pricing\Logger\Logger   $logger
+     */
+    public function __construct(
+        Context $context,
+        StoreManagerInterface $storeManager,
+        Logger $logger
+    ) {
+        parent::__construct($context);
+
+        $this->storeManager = $storeManager;
+        $this->logger       = $logger;
     }
 
     /**
-     * Should we show our custom tier price display?
+     * Get the currency code for the current store
      *
-     * @return bool
+     * @return string|null
      */
-    public function shouldShowTierPrices()
+    public function getCurrentStoreCurrencyCode()
     {
-        return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_SHOW_TIER_PRICES);
+        try {
+            return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
+        } catch (Exception $e) {
+            $this->log('getCurrentStoreCurrencyCode()', ['exception' => $e->getMessage()]);
+        }
+
+        return null;
+    }
+
+    private function log(string $message, array $extra = [])
+    {
+        $this->logger->info('Helper/Data - ' . $message, $extra);
     }
 }

@@ -77,7 +77,7 @@ class IcpricpRepository implements IcpricpRepositoryInterface
     public function save(
         IcpricpInterface $icpricp
     ) {
-        $this->log('save()', ['icpricp' => $icpricp->getData()]);
+        //$this->log('save()', ['icpricp' => $icpricp->getData()]);
 
         $this->validate($icpricp);
 
@@ -112,12 +112,12 @@ class IcpricpRepository implements IcpricpRepositoryInterface
     public function bulkSave(
         array $icpricpArray
     ) {
-        $this->log('bulkSave()');
+        //$this->log('bulkSave()');
 
         $results = [];
 
         foreach ($icpricpArray as $icpricp) {
-            $this->log('bulkSave()', ['icpricp' => $icpricp->getData()]);
+            //$this->log('bulkSave()', ['icpricp' => $icpricp->getData()]);
 
             try {
                 $this->save($icpricp);
@@ -139,14 +139,14 @@ class IcpricpRepository implements IcpricpRepositoryInterface
         string $quantityUnit = '',
         string $weightUnit = ''
     ) {
-        $this->log('get()', [
-            'currencyCode'    => $currencyCode,
-            'itemNumber'      => $itemNumber,
-            'pricelist'       => $pricelist,
-            'priceDetailType' => $priceDetailType,
-            'quantityUnit'    => $quantityUnit,
-            'weightUnit'      => $weightUnit
-        ]);
+        //$this->log('get()', [
+        //    'currencyCode'    => $currencyCode,
+        //    'itemNumber'      => $itemNumber,
+        //    'pricelist'       => $pricelist,
+        //    'priceDetailType' => $priceDetailType,
+        //    'quantityUnit'    => $quantityUnit,
+        //    'weightUnit'      => $weightUnit
+        //]);
 
         /** @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Collection $collection */
         $collection = $this->icpricpCollectionFactory->create()
@@ -167,10 +167,10 @@ class IcpricpRepository implements IcpricpRepositoryInterface
             );
 
         $collectionCount = $collection->getSize();
-        $this->log('get()', [
-            'select'          => $collection->getSelect(),
-            'collectionCount' => $collectionCount
-        ]);
+        //$this->log('get()', [
+        //    'select'          => $collection->getSelect(),
+        //    'collectionCount' => $collectionCount
+        //]);
 
         // If we find no records, log it and return.
         if ($collectionCount === 0) {
@@ -323,6 +323,7 @@ class IcpricpRepository implements IcpricpRepositoryInterface
     protected function doesRecordExist(
         IcpricpInterface $icpricp
     ) {
+        /*
         $this->log('doesRecordExist()', [
             Data\Icpricp::COLUMN_CURRENCY   => $icpricp->getCurrencyCode(),
             Data\Icpricp::COLUMN_ITEMNO     => $icpricp->getItemNumber(),
@@ -331,6 +332,7 @@ class IcpricpRepository implements IcpricpRepositoryInterface
             Data\Icpricp::COLUMN_QTYUNIT    => $icpricp->getQuantityUnit(),
             Data\Icpricp::COLUMN_WEIGHTUNIT => $icpricp->getWeightUnit()
         ]);
+        */
 
         /** @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Collection $collection */
         $collection = $this->icpricpCollectionFactory->create()

@@ -353,6 +353,52 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
     }
 
     /**
+     * @param int $index
+     *
+     * @return float|null
+     */
+    public function getDiscountPercentage(int $index)
+    {
+        switch ($index) {
+            case 1:
+                return $this->getDiscountMarkupPercentage1();
+            case 2:
+                return $this->getDiscountMarkupPercentage2();
+            case 3:
+                return $this->getDiscountMarkupPercentage3();
+            case 4:
+                return $this->getDiscountMarkupPercentage4();
+            case 5:
+                return $this->getDiscountMarkupPercentage5();
+            default:
+                $this->notice("getDiscountPercentage() - Unexpected percentage level: [$index].");
+
+        }
+
+        return null;
+    }
+
+    public function getDiscountAmount(int $index)
+    {
+        switch ($index) {
+            case 1:
+                return $this->getDiscountMarkupAmount1();
+            case 2:
+                return $this->getDiscountMarkupAmount2();
+            case 3:
+                return $this->getDiscountMarkupAmount3();
+            case 4:
+                return $this->getDiscountMarkupAmount4();
+            case 5:
+                return $this->getDiscountMarkupAmount5();
+            default:
+                $this->notice("getDiscountAmount() - Unexpected amount level: [$index].");
+        }
+
+        return null;
+    }
+
+    /**
      * Get customer-type pricing
      *
      * @param int $customerType
@@ -371,7 +417,10 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
                 $percentage = $this->getDiscountMarkupPercentage($customerType);
                 $this->log('getCustomerTypePricing()', ['percentage' => $percentage]);
 
-                if ($unitPrice = $this->getUnitPrice()) {
+                $unitPrice = $this->getUnitPrice();
+                $this->log('getCustomerTypePricing()', ['unitPrice' => $unitPrice]);
+
+                if ($unitPrice !== null) {
                     return $unitPrice * ((100 - $percentage) / 100);
                 } else {
                     $this->notice('getCustomerTypePricing() - Unable to determine unit price.');
@@ -382,7 +431,10 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
                 $amount = $this->getDiscountMarkupAmount($customerType);
                 $this->log('getCustomerTypePricing()', ['amount' => $amount]);
 
-                if ($unitPrice = $this->getUnitPrice()) {
+                $unitPrice = $this->getUnitPrice();
+                $this->log('getCustomerTypePricing()', ['unitPrice' => $unitPrice]);
+
+                if ($unitPrice !== null) {
                     return $unitPrice - $amount;
                 } else {
                     $this->notice('getCustomerTypePricing() - Unable to determine unit price.');
@@ -450,7 +502,7 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      */
     public function getDetails(string $uom = null)
     {
-        $this->log('getDetails()', ['uom' => $uom]);
+        //$this->log('getDetails()', ['uom' => $uom]);
 
         /** @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Collection $icpricpCollection */
         $icpricpCollection = $this->icpricpCollection->create()
@@ -479,11 +531,11 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
         }
 
         $collectionCount = $icpricpCollection->getSize();
-        $this->log('getDetails()', [
-            'table'           => 'icpricp',
-            'params'          => $params,
-            'collectionCount' => $collectionCount
-        ]);
+        //$this->log('getDetails()', [
+        //    'table'           => 'icpricp',
+        //    'params'          => $params,
+        //    'collectionCount' => $collectionCount
+        //]);
 
         if ($collectionCount === 0) {
             $this->notice('getDetails() - No ICPRICP records found.');
@@ -586,9 +638,8 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
     {
         $this->log('getUnitPrice()', ['uom' => $uom]);
 
-        /** @var \ECInternet\Sage300Pricing\Model\Data\Icpricp|null $details */
-        $details = $this->getDetails($uom);
-        if ($details) {
+        /** @var \ECInternet\Sage300Pricing\Model\Data\Icpricp $details */
+        if ($details = $this->getDetails($uom)) {
             return $details->getUnitPrice();
         } else {
             $this->notice('getUnitPrice() - Unable to find Item Pricing Details.');
@@ -639,7 +690,8 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
                 return $this->getDiscountMarkupPercentage5();
             default:
                 $this->notice("getDiscountMarkupPercentage() - Unexpected percentage level: [$index].");
-                return 0;
+
+                return 0.0;
         }
     }
 

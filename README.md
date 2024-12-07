@@ -49,6 +49,33 @@
     - Add new block for product price display
 
 ## Specifications
+
+### Sage300 to Magento Customer Mappings
+
+| Sage300               | Magento Attribute |
+|-----------------------|-------------------|
+| `[ARCUS].[IDCUST]`    | `customer_number` |
+| `[ARCUS].[CODECURN]`  | `currency_code`   |
+| `[ARCUS].[CUSTTYPE]`  | `customer_type`   |
+
+### Sage300 to Magento DB Syncs
+The following tables must be synced to Magento for pricing to work. We impose certain filters to limit functionality.
+
+| Sage300 Table | Magento Table                       | Table Filters    | Filter Note                               |
+|---------------|-------------------------------------|------------------|-------------------------------------------|
+| `[ICCUPR]`    | `ecinternet_sage300pricing_iccupr`  | [PRICEBY] = 2    | "Price By" = Item Number                  |
+| `[ICPRIC]`    | `ecinternet_sage300pricing_icpric`  | [PRICETYPE] = 1  | "Selling Price Based On" = Discount       |
+|               |                                     | [PRICEBY] = 1    | "Price By" = Quantity                     |
+| `[ICPRICP]`   | `ecinternet_sage300pricing_icpricp` | [DPRICETYPE] = 1 | "Price Detail Type" = Base Price Quantity |
+
+### Pricing Priorities
+1. Contract pricing
+2. CustomerType pricing
+3. TierPrice pricing
+4. Pricing based on shipping address
+5. Pricing based on customer group
+6. Base price
+
 ### ICCUPR - Contract Pricing
  - `PRICETYPE`
    - 1	=	Customer Type

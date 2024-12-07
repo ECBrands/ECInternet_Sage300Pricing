@@ -102,7 +102,7 @@
 			<settings>
 				<filter>text</filter>
 				<dataType>text</dataType>
-				<label translate="true">Price List Code</label>
+				<label translate="true">Expiration Date</label>
 			</settings>
 		</column>
 
@@ -134,7 +134,7 @@
 			<settings>
 				<filter>text</filter>
 				<dataType>text</dataType>
-				<label translate="true">Price List Code</label>
+				<label translate="true">Start Date</label>
 			</settings>
 		</column>
 	</columns>

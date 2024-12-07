@@ -169,7 +169,7 @@ interface IcpricInterface
     public function setMarkupCost(float $markupCost);
 
     /**
-     * Get Discount Markup Price By
+     * Get Discount Markup Price By - PRICEFMT
      *
      * @return int
      */
@@ -265,7 +265,7 @@ interface IcpricInterface
     public function setDiscountMarkupPercentage5(float $discountMarkupPercentage5);
 
     /**
-     * Get Price Determined By
+     * Get Price Determined By - PRICEBASE
      *
      * @return int
      */

@@ -15,7 +15,6 @@ use Magento\Customer\Model\SessionFactory as CustomerSessionFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Model\StoreManagerInterface;
 use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
 
@@ -50,11 +49,6 @@ class Customer extends AbstractHelper
     private $customerSessionFactory;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Logger\Logger
      */
     private $logger;
@@ -65,7 +59,6 @@ class Customer extends AbstractHelper
         CustomerRepositoryInterface $customerRepository,
         GroupRepositoryInterface $groupRepository,
         CustomerSessionFactory $customerSessionFactory,
-        StoreManagerInterface $storeManager,
         Logger $logger
     ) {
         parent::__construct($context);
@@ -74,24 +67,7 @@ class Customer extends AbstractHelper
         $this->customerRepository      = $customerRepository;
         $this->customerGroupRepository = $groupRepository;
         $this->customerSessionFactory  = $customerSessionFactory;
-        $this->storeManager            = $storeManager;
         $this->logger                  = $logger;
-    }
-
-    /**
-     * Get the currency code for the current store
-     *
-     * @return string|null
-     */
-    public function getCurrentStoreCurrencyCode()
-    {
-        try {
-            return $this->storeManager->getStore()->getCurrentCurrency()->getCode();
-        } catch (Exception $e) {
-            $this->log('getCurrentStoreCurrencyCode()', ['error' => $e->getMessage()]);
-        }
-
-        return null;
     }
 
     /**
@@ -118,11 +94,7 @@ class Customer extends AbstractHelper
         $customer = $this->getSessionCustomer();
 
         // Don't allow customers to change their currency if they already have one defined.
-        if (!empty($customer->getData(self::CUSTOMER_ATTRIBUTE_CURRENCY_CODE))) {
-            return false;
-        }
-
-        return true;
+        return !$customer->hasData(self::CUSTOMER_ATTRIBUTE_CURRENCY_CODE);
     }
 
     public function getSessionCustomerInterface()
@@ -178,7 +150,7 @@ class Customer extends AbstractHelper
         try {
             return $this->customerRepository->getById($customerId);
         } catch (Exception $e) {
-            $this->log('getCustomer()', ['customerId' => $customerId, 'exception' => $e->getMessage()]);
+            $this->log('getCustomerById()', ['customerId' => $customerId, 'exception' => $e->getMessage()]);
         }
 
         return null;
@@ -257,19 +229,15 @@ class Customer extends AbstractHelper
     private function getCustomerGroupId(
         CustomerInterface $customer
     ) {
-        $this->log('getCustomerGroupId()', ['customerId' => $customer->getId()]);
-
-        // Null customer check
+        // Null customerId check
         if ($customer->getId() === null) {
             $this->log('getCustomerGroupId() - Null CustomerId, using GuestPriceId...');
 
             return $this->getGuestPriceGroupId();
         }
 
-        $customerGroupId = $customer->getGroupId();
-        $this->log('getCustomerGroupId()', ['customerGroupId' => $customerGroupId]);
-
         // Null customerGroupId check
+        $customerGroupId = $customer->getGroupId();
         if ($customerGroupId === null) {
             $this->log('getCustomerGroupId() - Null CustomerGroupId, using GuestPriceId...');
 
@@ -289,14 +257,22 @@ class Customer extends AbstractHelper
         return $this->scopeConfig->getValue(self::CONFIG_PATH_GUEST_PRICEGROUP);
     }
 
+    /**
+     * Retrieve CustomerGroup by ID
+     *
+     * @param int $customerGroupId
+     *
+     * @return \Magento\Customer\Api\Data\GroupInterface|null
+     */
     private function getCustomerGroupById(int $customerGroupId)
     {
-        $this->log('getCustomerGroupById()', ['customerGroupId' => $customerGroupId]);
-
         try {
             return $this->customerGroupRepository->getById($customerGroupId);
         } catch (Exception $e) {
-            $this->log('getCustomerGroupById()', ['exception' => $e->getMessage()]);
+            $this->log('getCustomerGroupById()', [
+                'customerGroupId' => $customerGroupId,
+                'exception'       => $e->getMessage()
+            ]);
         }
 
         return null;

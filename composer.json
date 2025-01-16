@@ -1,0 +1,22 @@
+{
+	"name": "ecinternet/sage300pricing",
+	"description": "EC Internet Sage 300 Pricing",
+	"require": {
+		"php": ">=7.4.0",
+		"ext-json": "*"
+	},
+	"type": "magento2-module",
+	"version": "2.0.0.0",
+	"license": [
+		"OSL-3.0",
+		"AFL-3.0"
+	],
+	"autoload": {
+		"files": [
+			"registration.php"
+		],
+		"psr-4": {
+			"ECInternet\\Sage300Pricing\\": ""
+		}
+	}
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="ECInternet_Sage300Pricing::sage300pricing"
+		     title="Sage 300 Pricing"
+		     module="ECInternet_Sage300Pricing"
+		     sortOrder="220"
+		     parent="ECInternet_Base::base"
+		     resource="ECInternet_Sage300Pricing::sage300pricing"
+		/>
+
+		<add id="ECInternet_Sage300Pricing::settings"
+		     title="Settings"
+		     module="ECInternet_Sage300Pricing"
+		     sortOrder="1"
+		     parent="ECInternet_Sage300Pricing::sage300pricing"
+		     action="adminhtml/system_config/edit/section/sage300pricing"
+		     resource="ECInternet_Sage300Pricing::settings"
+		/>
+
+		<add id="ECInternet_Sage300Pricing::iccupr"
+		     title="ICCUPR"
+		     module="ECInternet_Sage300Pricing"
+		     sortOrder="2"
+		     parent="ECInternet_Sage300Pricing::sage300pricing"
+		     action="pricing/iccupr/index"
+		     resource="ECInternet_Sage300Pricing::iccupr"
+		/>
+
+		<add id="ECInternet_Sage300Pricing::icpric"
+		     title="ICPRIC"
+		     module="ECInternet_Sage300Pricing"
+		     sortOrder="3"
+		     parent="ECInternet_Sage300Pricing::sage300pricing"
+		     action="pricing/icpric/index"
+		     resource="ECInternet_Sage300Pricing::icpric"
+		/>
+
+		<add id="ECInternet_Sage300Pricing::icpricp"
+		     title="ICPRICP"
+		     module="ECInternet_Sage300Pricing"
+		     sortOrder="4"
+		     parent="ECInternet_Sage300Pricing::sage300pricing"
+		     action="pricing/icpricp/index"
+		     resource="ECInternet_Sage300Pricing::icpricp"
+		/>
+	</menu>
+</config>

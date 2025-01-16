@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="ecinternet_sage300pricing_iccupr" resource="default" engine="innodb" comment="Contract Pricing">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id" />
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At" />
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At" />
+    <column xsi:type="boolean" name="is_active" nullable="false" default="false" comment="Is Active" />
+    <column xsi:type="varchar" name="CUSTNO" nullable="false" length="12" comment="Customer Number" />
+    <column xsi:type="varchar" name="ITEMNO" nullable="false" length="24" comment="Item Number" />
+    <column xsi:type="varchar" name="PRICELIST" nullable="false" length="6" comment="Price List" />
+    <column xsi:type="varchar" name="EXPIRE" nullable="false" length="8" comment="Expiration Date" />
+    <column xsi:type="smallint" name="PRICETYPE" padding="6" unsigned="true" nullable="false" identity="false" comment="Price Type" />
+    <column xsi:type="smallint" name="CUSTTYPE" padding="6" unsigned="true" nullable="false" identity="false" comment="Customer Type" />
+    <column xsi:type="decimal" name="DISCPER" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="DISCAMT" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PLUSAMT" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PLUSPER" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="FIXPRICE" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="varchar" name="STARTDATE" nullable="false" length="8" comment="Start Date" />
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id" />
+    </constraint>
+    <constraint xsi:type="unique" referenceId="ECINTERNET_SAGE300PRICING_ICCUPR_CUSTNO_ITEMNO_PRICELIST">
+      <column name="CUSTNO" />
+      <column name="ITEMNO" />
+      <column name="PRICELIST" />
+    </constraint>
+  </table>
+
+  <table name="ecinternet_sage300pricing_icpric" resource="default" engine="innodb" comment="Item Pricing">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id" />
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At" />
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At" />
+    <column xsi:type="boolean" name="is_active" nullable="false" default="false" comment="Is Active" />
+    <column xsi:type="varchar" name="CURRENCY" nullable="false" length="3" comment="Currency Code" />
+    <column xsi:type="varchar" name="ITEMNO" nullable="false" length="24" comment="Unformatted Item Number" />
+    <column xsi:type="varchar" name="PRICELIST" nullable="false" length="6" comment="Price List Code" />
+    <column xsi:type="decimal" name="MARKUPCOST" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="smallint" name="PRICEFMT" padding="6" unsigned="true" nullable="false" identity="false" comment="Discount/Markup Price by" />
+    <column xsi:type="decimal" name="PRCNTLVL1" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRCNTLVL2" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRCNTLVL3" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRCNTLVL4" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRCNTLVL5" scale="5" precision="9" unsigned="false" nullable="false" />
+    <column xsi:type="smallint" name="PRICEBASE" padding="6" unsigned="true" nullable="false" identity="false" comment="Price Determined by" />
+    <column xsi:type="decimal" name="PRICEQTY1" scale="4" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRICEQTY2" scale="4" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRICEQTY3" scale="4" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRICEQTY4" scale="4" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="PRICEQTY5" scale="4" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="AMOUNTLVL1" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="AMOUNTLVL2" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="AMOUNTLVL3" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="AMOUNTLVL4" scale="6" precision="19" unsigned="false" nullable="false" />
+    <column xsi:type="decimal" name="AMOUNTLVL5" scale="6" precision="19" unsigned="false" nullable="false" />
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id" />
+    </constraint>
+    <constraint xsi:type="unique" referenceId="ECINTERNET_SAGE300PRICING_ICPRIC_CURRENCY_ITEMNO_PRICELIST">
+      <column name="CURRENCY" />
+      <column name="ITEMNO" />
+      <column name="PRICELIST" />
+    </constraint>
+  </table>
+
+  <table name="ecinternet_sage300pricing_icpricp" resource="default" engine="innodb" comment="Item Pricing Details">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id" />
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At" />
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At" />
+    <column xsi:type="boolean" name="is_active" nullable="false" default="false" comment="Is Active" />
+    <column xsi:type="varchar" name="CURRENCY" nullable="false" length="3" comment="Currency Code" />
+    <column xsi:type="varchar" name="ITEMNO" nullable="false" length="24" comment="Unformatted Item Number" />
+    <column xsi:type="varchar" name="PRICELIST" nullable="false" length="6" comment="Price List Code" />
+    <column xsi:type="smallint" name="DPRICETYPE" padding="6" unsigned="true" nullable="false" identity="false" comment="Price Detail Type" />
+    <column xsi:type="varchar" name="QTYUNIT" nullable="false" length="10" comment="Quantity Unit" default="" />
+    <column xsi:type="varchar" name="WEIGHTUNIT" nullable="false" length="10" comment="Weight Unit" default="" />
+    <column xsi:type="decimal" name="UNITPRICE" scale="6" precision="19" unsigned="true" nullable="false" comment="Unit Price" />
+    <column xsi:type="decimal" name="CONVERSION" scale="6" precision="19" unsigned="true" nullable="false" comment="Conversion Factor" />
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id" />
+    </constraint>
+    <constraint xsi:type="unique" referenceId="ECINTERNET_SAGE300PRICING_ICPRICP_CURRENCY_ITEMNO_PRICELIST_DPRICETYPE_QTYUNIT_WEIGHTUNIT">
+      <column name="CURRENCY" />
+      <column name="ITEMNO" />
+      <column name="PRICELIST" />
+      <column name="DPRICETYPE" />
+      <column name="QTYUNIT" />
+      <column name="WEIGHTUNIT" />
+    </constraint>
+  </table>
+</schema>

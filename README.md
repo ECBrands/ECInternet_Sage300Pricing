@@ -63,10 +63,10 @@ The following tables must be synced to Magento for pricing to work. We impose ce
 
 | Sage300 Table | Magento Table                       | Table Filters    | Filter Note                               |
 |---------------|-------------------------------------|------------------|-------------------------------------------|
-| `[ICCUPR]`    | `ecinternet_sage300pricing_iccupr`  | [PRICEBY] = 2    | "Price By" = Item Number                  |
-| `[ICPRIC]`    | `ecinternet_sage300pricing_icpric`  | [PRICETYPE] = 1  | "Selling Price Based On" = Discount       |
-|               |                                     | [PRICEBY] = 1    | "Price By" = Quantity                     |
-| `[ICPRICP]`   | `ecinternet_sage300pricing_icpricp` | [DPRICETYPE] = 1 | "Price Detail Type" = Base Price Quantity |
+| `[ICCUPR]`    | `ecinternet_sage300pricing_iccupr`  | `[PRICEBY] = 2`    | "Price By" = Item Number                  |
+| `[ICPRIC]`    | `ecinternet_sage300pricing_icpric`  | `[PRICETYPE] = 1`  | "Selling Price Based On" = Discount       |
+|               |                                     | `[PRICEBY] = 1`    | "Price By" = Quantity                     |
+| `[ICPRICP]`   | `ecinternet_sage300pricing_icpricp` | `[DPRICETYPE] = 1` | "Price Detail Type" = Base Price Quantity |
 
 ### Pricing Priorities
 1. Contract pricing

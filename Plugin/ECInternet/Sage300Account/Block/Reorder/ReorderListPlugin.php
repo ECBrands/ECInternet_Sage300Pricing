@@ -17,7 +17,7 @@ use ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface;
 
 class ReorderListPlugin
 {
-    const DEFAULT_CURRENCY_CODE = 'USD';
+    private const DEFAULT_CURRENCY_CODE = 'USD';
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface

@@ -11,13 +11,13 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Config
 {
-    const CONFIG_PATH_ENABLED               = 'sage300pricing/general/enable';
+    private const CONFIG_PATH_ENABLED               = 'sage300pricing/general/enable';
 
-    const CONFIG_PATH_ADMIN_PRICING_DISPLAY = 'sage300pricing/display/admin_pricing_title';
+    private const CONFIG_PATH_ADMIN_PRICING_DISPLAY = 'sage300pricing/display/admin_pricing_title';
 
-    const CONFIG_PATH_USE_LOWEST_PRICE      = 'sage300pricing/calculation/use_lowest_price';
+    private const CONFIG_PATH_USE_LOWEST_PRICE      = 'sage300pricing/calculation/use_lowest_price';
 
-    const CONFIG_PATH_SHOW_TIER_PRICES      = 'sage300pricing/tier_prices/show_tiers';
+    private const CONFIG_PATH_SHOW_TIER_PRICES      = 'sage300pricing/tier_prices/show_tiers';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -61,7 +61,7 @@ class Config
         return $this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_LOWEST_PRICE);
     }
 
-        /**
+    /**
      * Should we show our custom tier price display?
      *
      * @return bool

@@ -61,8 +61,8 @@
 ### Sage300 to Magento DB Syncs
 The following tables must be synced to Magento for pricing to work. We impose certain filters to limit functionality.
 
-| Sage300 Table | Magento Table                       | Table Filters    | Filter Note                               |
-|---------------|-------------------------------------|------------------|-------------------------------------------|
+| Sage300 Table | Magento Table                       | Table Filters      | Filter Note                               |
+|---------------|-------------------------------------|--------------------|-------------------------------------------|
 | `[ICCUPR]`    | `ecinternet_sage300pricing_iccupr`  | `[PRICEBY] = 2`    | "Price By" = Item Number                  |
 | `[ICPRIC]`    | `ecinternet_sage300pricing_icpric`  | `[PRICETYPE] = 1`  | "Selling Price Based On" = Discount       |
 |               |                                     | `[PRICEBY] = 1`    | "Price By" = Quantity                     |

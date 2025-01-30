@@ -26,7 +26,7 @@ use ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory as I
  */
 class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
 {
-    const CACHE_TAG = 'ecinternet_sage300pricing_icpric';
+    private const CACHE_TAG = 'ecinternet_sage300pricing_icpric';
 
     protected $_cacheTag    = 'ecinternet_sage300pricing_icpric';
 

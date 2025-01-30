@@ -22,7 +22,7 @@ use ECInternet\Sage300Pricing\Api\Data\IcpricpInterface;
  */
 class Icpricp extends AbstractModel implements IdentityInterface, IcpricpInterface
 {
-    const CACHE_TAG = 'ecinternet_sage300pricing_icpricp';
+    private const CACHE_TAG = 'ecinternet_sage300pricing_icpricp';
 
     protected $_cacheTag    = 'ecinternet_sage300pricing_icpricp';
 

@@ -21,7 +21,7 @@ use ECInternet\Sage300Pricing\Api\Data\IccuprInterface;
  */
 class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
 {
-    const CACHE_TAG = 'ecinternet_sage300pricing_iccupr';
+    private const CACHE_TAG = 'ecinternet_sage300pricing_iccupr';
 
     protected $_cacheTag    = self::CACHE_TAG;
 

@@ -20,13 +20,13 @@ use Exception;
 
 class Customer extends AbstractHelper
 {
-    const CONFIG_PATH_GUEST_PRICEGROUP       = 'sage300pricing/group_prices/guest_pricegroup';
+    private const CONFIG_PATH_GUEST_PRICEGROUP       = 'sage300pricing/group_prices/guest_pricegroup';
 
-    const CUSTOMER_ATTRIBUTE_CUSTOMER_NUMBER = 'customer_number';
+    private const CUSTOMER_ATTRIBUTE_CUSTOMER_NUMBER = 'customer_number';
 
-    const CUSTOMER_ATTRIBUTE_CUSTOMER_TYPE   = 'customer_type';
+    private const CUSTOMER_ATTRIBUTE_CUSTOMER_TYPE   = 'customer_type';
 
-    const CUSTOMER_ATTRIBUTE_CURRENCY_CODE   = 'currency_code';
+    private const CUSTOMER_ATTRIBUTE_CURRENCY_CODE   = 'currency_code';
 
     /**
      * @var \Magento\Customer\Api\AddressRepositoryInterface

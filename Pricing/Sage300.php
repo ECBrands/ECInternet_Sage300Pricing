@@ -24,13 +24,7 @@ use Exception;
 
 class Sage300 implements PricingSystemInterface
 {
-    const PRICING_SYSTEM_NAME                = 'sage300';
-
-    const CUSTOMER_ATTRIBUTE_CURRENCY_CODE   = 'currency_code';
-
-    const CUSTOMER_ATTRIBUTE_CUSTOMER_TYPE   = 'customer_type';
-
-    const CUSTOMER_ATTRIBUTE_CUSTOMER_NUMBER = 'customer_number';
+    private const PRICING_SYSTEM_NAME = 'sage300';
 
     /**
      * @var \ECInternet\Sage300Account\Helper\Uom
@@ -113,14 +107,16 @@ class Sage300 implements PricingSystemInterface
     {
         $this->log('getPrice()', ['sku' => $sku, 'quantity' => $quantity]);
 
-        if ($customer = $this->customerHelper->getSessionCustomerInterface()) {
-            try {
-                return $this->getCustomPrice($customer, $sku, $quantity);
-            } catch (LocalizedException $e) {
-                $this->log('getPrice()', ['sku' => $sku, 'quantity' => $quantity, 'exception' => $e->getMessage()]);
-            }
-        } else {
+        $customer = $this->customerHelper->getSessionCustomerInterface();
+        if (!$customer) {
             $this->log('getPrice() - SessionCustomerInterface not found.');
+            return null;
+        }
+
+        try {
+            return $this->getCustomPrice($customer, $sku, $quantity);
+        } catch (LocalizedException $e) {
+            $this->log('getPrice()', ['sku' => $sku, 'quantity' => $quantity, 'exception' => $e->getMessage()]);
         }
 
         return null;
@@ -140,7 +136,6 @@ class Sage300 implements PricingSystemInterface
             $qty = $quoteItem->getQty();
             if (!is_numeric($qty)) {
                 $this->log('getPriceForQuoteItem() - $item->getQty() did not return a numeric value.');
-
                 return null;
             }
 
@@ -214,34 +209,36 @@ class Sage300 implements PricingSystemInterface
 
         $currencyCode = $this->helper->getCurrentStoreCurrencyCode();
         $this->log('getGuestPrice()', ['currencyCode' => $currencyCode]);
+
         if ($currencyCode === null) {
             $this->log('getGuestPrice() - Could not lookup the current store currency code');
-
             return null;
         }
 
         $customerGroup = $this->customerHelper->getDefaultGroupCodeByCurrency();
         $this->log('getGuestPrice()', ['customerGroupCode' => $customerGroup]);
+
         if (empty($customerGroup)) {
             $this->log('getGuestPrice() - Could not find a valid CustomerGroup for the current currency, exiting.');
-
             return null;
         }
 
         $uom = $this->uomHelper->getUomText($sku, $customerGroup);
         $this->log('getGuestPrice()', ['uom' => $uom]);
 
-        if ($itemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup)) {
-            if ($itemPricingDetailsRecord = $itemPricingRecord->getDetails($uom)) {
-                return $itemPricingDetailsRecord->getUnitPrice();
-            } else {
-                $this->log("getGuestPrice() - Could not find item detail pricing record WHERE currency_code = '$currencyCode' AND sku = '$sku' AND customer_group = '$customerGroup'.");
-            }
-        } else {
+        $itemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup);
+        if (!$itemPricingRecord) {
             $this->log("getGuestPrice() - Could not find item pricing record WHERE currency_code = '$currencyCode' AND sku = '$sku' AND customer_group = '$customerGroup'.");
+            return null;
         }
 
-        return null;
+        $itemPricingDetailsRecord = $itemPricingRecord->getDetails($uom);
+        if (!$itemPricingDetailsRecord) {
+            $this->log("getGuestPrice() - Could not find item detail pricing record WHERE currency_code = '$currencyCode' AND sku = '$sku' AND customer_group = '$customerGroup'.");
+            return null;
+        }
+
+        return $itemPricingDetailsRecord->getUnitPrice();
     }
 
     /**
@@ -422,97 +419,103 @@ class Sage300 implements PricingSystemInterface
         $itemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup);
 
         /** @var \ECInternet\Sage300Pricing\Api\Data\Iccuprinterface $activeContractPricingRecord */
-        if ($activeContractPricingRecord = $this->getActiveContractPricingRecord($customerNumber, $sku, $customerGroup)) {
-            // Cache our price type
-            $contractPriceType = $activeContractPricingRecord->getPriceType();
-            $this->log("getContractPrice() - ICCUPR.PRICETYPE = [$contractPriceType]");
-
-            switch ($contractPriceType) {
-                case Iccupr::PRICE_TYPE_CUSTOMER_TYPE:
-                    if ($itemPricingRecord) {
-                        $contractPricingCustomerType = $activeContractPricingRecord->getCustomerType();
-                        $this->log("getContractPrice() - ICCUPR.CUSTTYPE = [$contractPricingCustomerType]");
-
-                        if ($contractPricingCustomerType !== null) {
-                            if (is_numeric($contractPricingCustomerType)) {
-                                $customerTypePrice = $itemPricingRecord->getCustomerTypePricing((int)$contractPricingCustomerType);
-                                if ($customerTypePrice !== null) {
-                                    $this->log('getContractPrice() - Returning customer-type contract price.');
-                                    $this->log('getContractPrice() - ---------------------------------------');
-
-                                    return $customerTypePrice;
-                                } else {
-                                    $this->log('getContractPrice() - Unable to calculate customer-type price.');
-                                }
-                            } else {
-                                $this->log('getContractPrice() - Unable to calculate price due to non-numeric [ICCUPR].[CUSTTYPE] value.');
-                            }
-                        } else {
-                            $this->log('getContractPrice() - Unable to calculate price due to missing [ICCUPR].[CUSTTYPE] value.');
-                        }
-                    } else {
-                        $this->log('getContractPrice() - Unable to calculate price due to missing ICPRIC record.');
-                    }
-
-                    break;
-
-                case Iccupr::PRICE_TYPE_DISCOUNT_PERCENTAGE:
-                    if ($itemPricingRecord) {
-                        if ($itemPricingDetailsRecord = $itemPricingRecord->getDetails()) {
-                            $this->log('getContractPrice() - Returning percentage discount contract price.');
-                            $this->log('getContractPrice() - ---------------------------------------');
-
-                            return $itemPricingDetailsRecord->getUnitPrice() * (1 - ($activeContractPricingRecord->getDiscountPercentage() / 100));
-                        } else {
-                            $this->log('getContractPrice() - Unable to calculate price due to missing ICPRICP record.');
-                        }
-                    } else {
-                        $this->log('getContractPrice() - Unable to calculate price due to missing ICPRIC record.');
-                    }
-
-                    break;
-
-                case Iccupr::PRICE_TYPE_DISCOUNT_AMOUNT:
-                    if ($itemPricingRecord) {
-                        if ($itemPricingDetailsRecord = $itemPricingRecord->getDetails()) {
-                            $this->log('getContractPrice() - Returning amount discount contract price.');
-                            $this->log('getContractPrice() - ---------------------------------------');
-
-                            return $itemPricingDetailsRecord->getUnitPrice() - $activeContractPricingRecord->getDiscountAmount();
-                        } else {
-                            $this->log('getContractPrice() - Unable to calculate price due to missing ICPRICP record.');
-                        }
-                    } else {
-                        $this->log('getContractPrice() - Unable to calculate price due to missing ICPRIC record.');
-                    }
-
-                    break;
-
-                case Iccupr::PRICE_TYPE_COST_PLUS_A_PERCENTAGE:
-                    $this->log('getContractPrice() - Returning percentage plus contract price.');
-                    $this->log('getContractPrice() - ---------------------------------------');
-
-                    return $markupCost + (1 + $activeContractPricingRecord->getPlusPercentage());
-
-                case Iccupr::PRICE_TYPE_COST_PLUS_FIXED_AMOUNT:
-                    $this->log('getContractPrice() - Returning amount plus contract price.');
-                    $this->log('getContractPrice() - ---------------------------------------');
-
-                    return $markupCost + $activeContractPricingRecord->getPlusAmount();
-
-                case Iccupr::PRICE_TYPE_FIXED_PRICE:
-                    $this->log('getCustomPrice() - Returning fixed-price contract price.');
-                    $this->log('getCustomPrice() - ---------------------------------------');
-
-                    return $activeContractPricingRecord->getFixedPrice();
-
-                default:
-                    throw new LocalizedException(
-                        __("Invalid 'price type' value found: [$contractPriceType].")
-                    );
-            }
-        } else {
+        $activeContractPricingRecord = $this->getActiveContractPricingRecord($customerNumber, $sku, $customerGroup);
+        if (!$activeContractPricingRecord) {
             $this->log('getContractPrice() - Unable to calculate contract price due to missing ICCUPR record.');
+            return null;
+        }
+
+        // Cache our price type
+        $contractPriceType = $activeContractPricingRecord->getPriceType();
+        $this->log("getContractPrice() - ICCUPR.PRICETYPE = [$contractPriceType]");
+
+        switch ($contractPriceType) {
+            case Iccupr::PRICE_TYPE_CUSTOMER_TYPE:
+                if (!$itemPricingRecord) {
+                    $this->log('getContractPrice() - Unable to calculate price due to missing ICPRIC record.');
+                    break;
+                }
+
+                $contractPricingCustomerType = $activeContractPricingRecord->getCustomerType();
+                $this->log("getContractPrice() - ICCUPR.CUSTTYPE = [$contractPricingCustomerType]");
+
+                if ($contractPricingCustomerType == null) {
+                    $this->log('getContractPrice() - Unable to calculate price due to missing [ICCUPR].[CUSTTYPE] value.');
+                    break;
+                }
+
+                if (!is_numeric($contractPricingCustomerType)) {
+                    $this->log('getContractPrice() - Unable to calculate price due to non-numeric [ICCUPR].[CUSTTYPE] value.');
+                    break;
+                }
+
+                $customerTypePrice = $itemPricingRecord->getCustomerTypePricing((int)$contractPricingCustomerType);
+                if ($customerTypePrice !== null) {
+                    $this->log('getContractPrice() - Returning customer-type contract price.');
+                    $this->log('getContractPrice() - ---------------------------------------');
+
+                    return $customerTypePrice;
+                } else {
+                    $this->log('getContractPrice() - Unable to calculate customer-type price.');
+                }
+
+                break;
+
+            case Iccupr::PRICE_TYPE_DISCOUNT_PERCENTAGE:
+                if ($itemPricingRecord) {
+                    if ($itemPricingDetailsRecord = $itemPricingRecord->getDetails()) {
+                        $this->log('getContractPrice() - Returning percentage discount contract price.');
+                        $this->log('getContractPrice() - ---------------------------------------');
+
+                        return $itemPricingDetailsRecord->getUnitPrice() * (1 - ($activeContractPricingRecord->getDiscountPercentage() / 100));
+                    } else {
+                        $this->log('getContractPrice() - Unable to calculate price due to missing ICPRICP record.');
+                    }
+                } else {
+                    $this->log('getContractPrice() - Unable to calculate price due to missing ICPRIC record.');
+                }
+
+                break;
+
+            case Iccupr::PRICE_TYPE_DISCOUNT_AMOUNT:
+                if (!$itemPricingRecord) {
+                    $this->log('getContractPrice() - Unable to calculate price due to missing ICPRIC record.');
+                    break;
+                }
+
+                if ($itemPricingDetailsRecord = $itemPricingRecord->getDetails()) {
+                    $this->log('getContractPrice() - Returning amount discount contract price.');
+                    $this->log('getContractPrice() - ---------------------------------------');
+
+                    return $itemPricingDetailsRecord->getUnitPrice() - $activeContractPricingRecord->getDiscountAmount();
+                } else {
+                    $this->log('getContractPrice() - Unable to calculate price due to missing ICPRICP record.');
+                }
+
+                break;
+
+            case Iccupr::PRICE_TYPE_COST_PLUS_A_PERCENTAGE:
+                $this->log('getContractPrice() - Returning percentage plus contract price.');
+                $this->log('getContractPrice() - ---------------------------------------');
+
+                return $markupCost + (1 + $activeContractPricingRecord->getPlusPercentage());
+
+            case Iccupr::PRICE_TYPE_COST_PLUS_FIXED_AMOUNT:
+                $this->log('getContractPrice() - Returning amount plus contract price.');
+                $this->log('getContractPrice() - ---------------------------------------');
+
+                return $markupCost + $activeContractPricingRecord->getPlusAmount();
+
+            case Iccupr::PRICE_TYPE_FIXED_PRICE:
+                $this->log('getCustomPrice() - Returning fixed-price contract price.');
+                $this->log('getCustomPrice() - ---------------------------------------');
+
+                return $activeContractPricingRecord->getFixedPrice();
+
+            default:
+                throw new LocalizedException(
+                    __("Invalid 'price type' value found: [$contractPriceType].")
+                );
         }
 
         return null;
@@ -545,25 +548,30 @@ class Sage300 implements PricingSystemInterface
         ]);
 
         // We need active ICPRIC record to look for customer's 'customer_type' index.
-        if ($activeItemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup)) {
-            $customerType = $this->customerHelper->getCustomerType($customer);
-            $this->log('getCustomerTypePrice()', ['customerType' => $customerType]);
+        $activeItemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup);
 
-            if (is_numeric($customerType)) {
-                if ((int)$customerType > 0) {
-                    $this->log('getCustomerTypePrice() - Returning customer-type price.');
-                    $this->log('getCustomerTypePrice() - ---------------------------------------');
-
-                    return $activeItemPricingRecord->getCustomerTypePricing((int)$customerType);
-                }
-            } else {
-                $this->log('getCustomerTypePrice() - Unable to calculate price due to non-numeric customer_type value.');
-            }
-        } else {
+        if (!$activeItemPricingRecord) {
             $this->log('getCustomerTypePrice() - Unable to calculate customer-type price due to missing ICPRIC record.');
+            return null;
         }
 
-        return null;
+        $customerType = $this->customerHelper->getCustomerType($customer);
+        $this->log('getCustomerTypePrice()', ['customerType' => $customerType]);
+
+        if (!is_numeric($customerType)) {
+            $this->log('getCustomerTypePrice() - Unable to calculate price due to non-numeric customer_type value.');
+            return null;
+        }
+
+        if ((int)$customerType <= 0) {
+            $this->log('getCustomerTypePrice() - Invalid customerType.');
+            return null;
+        }
+
+        $this->log('getCustomerTypePrice() - Returning customer-type price.');
+        $this->log('getCustomerTypePrice() - ---------------------------------------');
+
+        return $activeItemPricingRecord->getCustomerTypePricing((int)$customerType);
     }
 
     /**
@@ -593,28 +601,30 @@ class Sage300 implements PricingSystemInterface
         ]);
 
         /** @var \ECInternet\Sage300Pricing\Api\Data\IcpricInterface $activeItemPricingRecord */
-        if ($activeItemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup)) {
-            if ($activeItemPricingRecord->isPriceDeterminedByVolumeDiscounts()) {
-                $this->log('getVolumeDiscountPrice() - Price determined by volume discounts.  [ICPRIC].[PRICEBASE] = 2');
+        $activeItemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup);
 
-                // Used passed-in value or pull from current quote (if it exists)
-                $qty = ($qtyOverride !== null) ? $qtyOverride : $this->quoteHelper->getCurrentItemQuantity($sku);
-                $this->log('getVolumeDiscountPrice()', ['qty' => $qty]);
-
-                $volumeDiscountPrice = $activeItemPricingRecord->getVolumeDiscountPrice($qty, $uom);
-                if ($volumeDiscountPrice !== null) {
-                    return $volumeDiscountPrice;
-                } else {
-                    $this->log('getVolumeDiscountPrice() - Unable to calculate volume discount price due to non-matching quantity breaks.');
-                }
-            } else {
-                $this->log('getVolumeDiscountPrice() - Price NOT determined by volume discounts.');
-            }
-        } else {
+        if (!$activeItemPricingRecord) {
             $this->log('getVolumeDiscountPrice() - Unable to calculate volume discount price due to missing ICPRIC record.');
+            return null;
         }
 
-        return null;
+        if (!$activeItemPricingRecord->isPriceDeterminedByVolumeDiscounts()) {
+            $this->log('getVolumeDiscountPrice() - Price NOT determined by volume discounts.');
+            return null;
+        }
+
+        // Used passed-in value or pull from current quote (if it exists)
+        $qty = ($qtyOverride !== null) ? $qtyOverride : $this->quoteHelper->getCurrentItemQuantity($sku);
+        $this->log('getVolumeDiscountPrice()', ['qty' => $qty]);
+
+        $volumeDiscountPrice = $activeItemPricingRecord->getVolumeDiscountPrice($qty, $uom);
+
+        if ($volumeDiscountPrice == null) {
+            $this->log('getVolumeDiscountPrice() - Unable to calculate volume discount price due to non-matching quantity breaks.');
+            return null;
+        }
+
+        return $volumeDiscountPrice;
     }
 
     /**
@@ -639,34 +649,39 @@ class Sage300 implements PricingSystemInterface
             'uom'          => $uom
         ]);
 
-        if ($customerDefaultShippingAddress = $this->customerHelper->getCustomerDefaultShippingAddress($customer)) {
-            if ($defaultShippingAddressPricelist = $customerDefaultShippingAddress->getCustomAttribute('customer_pricelist')) {
-                if ($defaultShippingAddressPricelistValue = $defaultShippingAddressPricelist->getValue()) {
-                    /** @var \ECInternet\Sage300Pricing\Api\Data\IcpricInterface $pricingRecord */
-                    if ($pricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, (string)$defaultShippingAddressPricelistValue)) {
-                        /** @var \ECInternet\Sage300Pricing\Model\Data\Icpricp $pricingDetailRecord */
-                        if ($pricingDetailRecord = $pricingRecord->getDetails($uom)) {
-                            $this->log('getShippingAddressBasedPrice() - Returning ICPRICP.UNITPRICE');
-                            $this->log('getShippingAddressBasedPrice() - ---------------------------------------');
-
-                            return $pricingDetailRecord->getUnitPrice();
-                        } else {
-                            $this->log('getShippingAddressBasedPrice() - Could not find pricing detail record (ICPRICP)');
-                        }
-                    } else {
-                        $this->log('getShippingAddressBasedPrice() - Could not find pricing record (ICPRIC)');
-                    }
-                } else {
-                    $this->log("getShippingAddressBasedPrice() - 'customer_pricelist' attribute does not have a value.");
-                }
-            } else {
-                $this->log("getShippingAddressBasedPrice() - 'customer_pricelist' attribute not found on default shipping address.");
-            }
-        } else {
+        $customerDefaultShippingAddress = $this->customerHelper->getCustomerDefaultShippingAddress($customer);
+        if (!$customerDefaultShippingAddress) {
             $this->log('getShippingAddressBasedPrice() - Default shipping address not found for customer.');
+            return null;
         }
 
-        return null;
+        $defaultShippingAddressPricelist = $customerDefaultShippingAddress->getCustomAttribute('customer_pricelist');
+        if (!$defaultShippingAddressPricelist) {
+            $this->log("getShippingAddressBasedPrice() - 'customer_pricelist' attribute not found on default shipping address.");
+            return null;
+        }
+
+        $defaultShippingAddressPricelistValue = $defaultShippingAddressPricelist->getValue();
+        if (!$defaultShippingAddressPricelistValue) {
+            $this->log("getShippingAddressBasedPrice() - 'customer_pricelist' attribute does not have a value.");
+            return null;
+        }
+
+        /** @var \ECInternet\Sage300Pricing\Api\Data\IcpricInterface $pricingRecord */
+        $pricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, (string)$defaultShippingAddressPricelistValue);
+        if (!$pricingRecord) {
+            $this->log('getShippingAddressBasedPrice() - Could not find pricing record (ICPRIC)');
+            return null;
+        }
+
+        /** @var \ECInternet\Sage300Pricing\Model\Data\Icpricp $pricingDetailRecord */
+        $pricingDetailRecord = $pricingRecord->getDetails($uom);
+        if (!$pricingDetailRecord) {
+            $this->log('getShippingAddressBasedPrice() - Could not find pricing detail record (ICPRICP)');
+            return null;
+        }
+
+        return $pricingDetailRecord->getUnitPrice();
     }
 
     private function getCustomerGroupPrice(
@@ -682,17 +697,19 @@ class Sage300 implements PricingSystemInterface
             'uom'           => $uom
         ]);
 
-        if ($itemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup)) {
-            if ($itemPricingDetailsRecord = $itemPricingRecord->getDetails($uom)) {
-                return $itemPricingDetailsRecord->getUnitPrice();
-            } else {
-                $this->log('getCustomPrice() - Unable to calculate customer group price due to missing ICPRICP record.');
-            }
-        } else {
-            $this->log('getCustomPrice() - Unable to calculate customer group price due to missing ICPRIC record.');
+        $itemPricingRecord = $this->getActiveItemPricingRecord($currencyCode, $sku, $customerGroup);
+        if (!$itemPricingRecord) {
+            $this->log('getCustomerGroupPrice() - Unable to calculate customer group price due to missing ICPRIC record.');
+            return null;
         }
 
-        return null;
+        $itemPricingDetailsRecord = $itemPricingRecord->getDetails($uom);
+        if (!$itemPricingDetailsRecord) {
+            $this->log('getCustomerGroupPrice() - Unable to calculate customer group price due to missing ICPRICP record.');
+            return null;
+        }
+
+        return $itemPricingDetailsRecord->getUnitPrice();
     }
 
     /**
@@ -712,24 +729,25 @@ class Sage300 implements PricingSystemInterface
             'pricelist'      => $pricelist
         ]);
 
-        // TODO: Add mechanism to check if we've already fetched this record.
-
+        /** @var \ECInternet\Sage300Pricing\Api\Data\IccuprInterface $iccupr */
         $iccupr = $this->iccuprRepository->get($customerNumber, $itemNumber, $pricelist);
-        if ($iccupr !== null) {
-            if ($iccupr->getIsActive()) {
-                if ($iccupr->isValidToday()) {
-                    return $iccupr;
-                } else {
-                    $this->log('getActiveContractPricingRecord() - Contract pricing record is not valid today.');
-                }
-            } else {
-                $this->log('getActiveContractPricingRecord() - Contract pricing record found, but inactive.');
-            }
-        } else {
+
+        if ($iccupr == null) {
             $this->log('getActiveContractPricingRecord() - Could not find contract pricing record.');
+            return null;
         }
 
-        return null;
+        if (!$iccupr->getIsActive()) {
+            $this->log('getActiveContractPricingRecord() - Contract pricing record found, but inactive.');
+            return null;
+        }
+
+        if (!$iccupr->isValidToday()) {
+            $this->log('getActiveContractPricingRecord() - Contract pricing record is not valid today.');
+            return null;
+        }
+
+        return $iccupr;
     }
 
     /**
@@ -743,25 +761,25 @@ class Sage300 implements PricingSystemInterface
      */
     private function getActiveItemPricingRecord(string $currencyCode, string $itemNumber, string $pricelist)
     {
-        //$this->log('getActiveItemPricingRecord()', [
-        //    'currencyCode' => $currencyCode,
-        //    'itemNumber'   => $itemNumber,
-        //    'pricelist'    => $pricelist
-        //]);
+        $this->log('getActiveItemPricingRecord()', [
+            'currencyCode' => $currencyCode,
+            'itemNumber'   => $itemNumber,
+            'pricelist'    => $pricelist
+        ]);
 
-        // TODO: Add mechanism to check if we've already fetched this record.
+        $icpric = $this->icpricRepository->get($currencyCode, $itemNumber, $pricelist);
 
-        if ($icpric = $this->icpricRepository->get($currencyCode, $itemNumber, $pricelist)) {
-            if ($icpric->getIsActive()) {
-                return $icpric;
-            } else {
-                $this->log('getActiveItemPricingRecord() - ICPRIC record found, but inactive');
-            }
-        } else {
+        if (!$icpric) {
             $this->log('getActiveItemPricingRecord() - ICPRIC record not found');
+            return null;
         }
 
-        return null;
+        if (!$icpric->getIsActive()) {
+            $this->log('getActiveItemPricingRecord() - ICPRIC record found, but inactive');
+            return null;
+        }
+
+        return $icpric;
     }
 
     /**

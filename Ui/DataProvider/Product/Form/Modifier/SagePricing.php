@@ -21,11 +21,9 @@ use ECInternet\Sage300Pricing\Model\Config;
  */
 class SagePricing extends AbstractModifier
 {
-    const SAGEPRICING_MODAL_LINK     = 'sagepricing_modal_link';
+    private const SAGEPRICING_MODAL_LINK     = 'sagepricing_modal_link';
 
-    const SAGEPRICING_MODAL_INDEX    = 'sagepricing_modal';
-
-    const PRICING_SECTION_NAME       = 'section';
+    private const SAGEPRICING_MODAL_INDEX    = 'sagepricing_modal';
 
     /**
      * @var \Magento\Catalog\Model\Locator\LocatorInterface
@@ -132,10 +130,6 @@ class SagePricing extends AbstractModifier
                                     'text'    => __('Close'),
                                     'class'   => 'action-primary', // additional class
                                     'actions' => [
-                                        /*[
-                                            'targetName' => 'index = product_form', // Element selector
-                                            'actionName' => 'save', // Save parent form (product)
-                                        ],*/
                                         'closeModal', // method name
                                     ],
                                 ],

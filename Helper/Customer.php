@@ -22,11 +22,11 @@ class Customer extends AbstractHelper
 {
     private const CONFIG_PATH_GUEST_PRICEGROUP       = 'sage300pricing/group_prices/guest_pricegroup';
 
-    private const CUSTOMER_ATTRIBUTE_CUSTOMER_NUMBER = 'customer_number';
+    public const CUSTOMER_ATTRIBUTE_CUSTOMER_NUMBER = 'customer_number';
 
-    private const CUSTOMER_ATTRIBUTE_CUSTOMER_TYPE   = 'customer_type';
+    public const CUSTOMER_ATTRIBUTE_CUSTOMER_TYPE   = 'customer_type';
 
-    private const CUSTOMER_ATTRIBUTE_CURRENCY_CODE   = 'currency_code';
+    public const CUSTOMER_ATTRIBUTE_CURRENCY_CODE   = 'currency_code';
 
     /**
      * @var \Magento\Customer\Api\AddressRepositoryInterface

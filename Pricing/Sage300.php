@@ -107,6 +107,11 @@ class Sage300 implements PricingSystemInterface
     {
         $this->log('getPrice()', ['sku' => $sku, 'quantity' => $quantity]);
 
+        if (!$this->config->isModuleEnabled()) {
+            $this->log('getPrice() - Module is not enabled.');
+            return null;
+        }
+
         $customer = $this->customerHelper->getSessionCustomerInterface();
         if (!$customer) {
             $this->log('getPrice() - SessionCustomerInterface not found.');
@@ -125,25 +130,33 @@ class Sage300 implements PricingSystemInterface
     public function getPriceForQuoteItem(
         QuoteItem $quoteItem
     ) {
+        $this->log('getPriceForQuoteItem()', [
+            'quoteItem'   => $quoteItem->getSku(),
+            'quoteItemId' => $quoteItem->getId()
+        ]);
+
+        if (!$this->config->isModuleEnabled()) {
+            $this->log('getPriceForQuoteItem() - Module is not enabled.');
+            return null;
+        }
+
         /** @var \Magento\Quote\Model\Quote $quote */
-        if ($quote = $quoteItem->getQuote()) {
-            $this->log('getPriceForQuoteItem()', [
-                'quoteId'     => $quote->getId(),
-                'quoteItem'   => $quoteItem->getSku(),
-                'quoteItemId' => $quoteItem->getId()
-            ]);
+        $quote = $quoteItem->getQuote();
+        if (!$quote) {
+            $this->log('getPriceForQuoteItem() - Unable to extract Quote from QuoteItem.');
+            return null;
+        }
 
-            $qty = $quoteItem->getQty();
-            if (!is_numeric($qty)) {
-                $this->log('getPriceForQuoteItem() - $item->getQty() did not return a numeric value.');
-                return null;
-            }
+        $qty = $quoteItem->getQty();
+        if (!is_numeric($qty)) {
+            $this->log('getPriceForQuoteItem() - $item->getQty() did not return a numeric value.');
+            return null;
+        }
 
-            try {
-                return $this->getPrice((string)$quoteItem->getSku(), (float)$qty);
-            } catch (Exception $e) {
-                $this->log('getPriceForQuoteItem()', ['exception' => $e->getMessage()]);
-            }
+        try {
+            return $this->getPrice((string)$quoteItem->getSku(), (float)$qty);
+        } catch (Exception $e) {
+            $this->log('getPriceForQuoteItem()', ['exception' => $e->getMessage()]);
         }
 
         return null;
@@ -160,6 +173,11 @@ class Sage300 implements PricingSystemInterface
     public function getCurrentCustomerPrice(string $sku, float $qty = null)
     {
         $this->log('getCurrentCustomerPrice()', ['sku' => $sku, 'qty' => $qty]);
+
+        if (!$this->config->isModuleEnabled()) {
+            $this->log('getCurrentCustomerPrice() - Module is not enabled.');
+            return null;
+        }
 
         if ($customerId = $this->customerHelper->getSessionCustomer()->getId()) {
             $this->log('getCurrentCustomerPrice()', ['customerId' => $customerId]);
@@ -206,6 +224,11 @@ class Sage300 implements PricingSystemInterface
     public function getGuestPrice(string $sku)
     {
         $this->log('getGuestPrice()', ['sku' => $sku]);
+
+        if (!$this->config->isModuleEnabled()) {
+            $this->log('getGuestPrice() - Module is not enabled.');
+            return null;
+        }
 
         $currencyCode = $this->helper->getCurrentStoreCurrencyCode();
         $this->log('getGuestPrice()', ['currencyCode' => $currencyCode]);
@@ -263,6 +286,11 @@ class Sage300 implements PricingSystemInterface
             'sku'         => $sku,
             'qtyOverride' => $qtyOverride
         ]);
+
+        if (!$this->config->isModuleEnabled()) {
+            $this->log('getCustomPrice() - Module is not enabled.');
+            return null;
+        }
 
         // PRICING PRIORITIES
         // 1. Contract pricing (ICCUPR).
@@ -380,11 +408,18 @@ class Sage300 implements PricingSystemInterface
             'uom'          => $uom
         ]);
 
-        if ($itemPricing = $this->getActiveItemPricingRecord($currencyCode, $itemNumber, $pricelist)) {
-            return $itemPricing->getUnitPrice($uom);
+        if (!$this->config->isModuleEnabled()) {
+            $this->log('getUnitPrice() - Module is not enabled.');
+            return null;
         }
 
-        return null;
+        $itemPricing = $this->getActiveItemPricingRecord($currencyCode, $itemNumber, $pricelist);
+        if (!$itemPricing) {
+            $this->log('getUnitPrice() - Unable to find active ICPRIC record.');
+            return null;
+        }
+
+        return $itemPricing->getUnitPrice($uom);
     }
 
     /**
@@ -768,7 +803,6 @@ class Sage300 implements PricingSystemInterface
         ]);
 
         $icpric = $this->icpricRepository->get($currencyCode, $itemNumber, $pricelist);
-
         if (!$icpric) {
             $this->log('getActiveItemPricingRecord() - ICPRIC record not found');
             return null;

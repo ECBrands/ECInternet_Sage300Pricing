@@ -140,13 +140,6 @@ class Sage300 implements PricingSystemInterface
             return null;
         }
 
-        /** @var \Magento\Quote\Model\Quote $quote */
-        $quote = $quoteItem->getQuote();
-        if (!$quote) {
-            $this->log('getPriceForQuoteItem() - Unable to extract Quote from QuoteItem.');
-            return null;
-        }
-
         $qty = $quoteItem->getQty();
         if (!is_numeric($qty)) {
             $this->log('getPriceForQuoteItem() - $item->getQty() did not return a numeric value.');

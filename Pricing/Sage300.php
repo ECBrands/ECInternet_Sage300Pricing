@@ -318,7 +318,7 @@ class Sage300 implements PricingSystemInterface
         $customerTypePrice = $this->getCustomerTypePrice($customer, $currencyCode, $sku, $customerGroup, $uom);
 
         // TIER PRICE - Check ICPRIC record for PRICEBASE == 2
-        $volumeDiscountPrice = $this->getVolumeDiscountPrice($currencyCode, $sku, $customerGroup);
+        $volumeDiscountPrice = $this->getVolumeDiscountPrice($currencyCode, $sku, $customerGroup, $uom, $qtyOverride);
 
         // PRICE LIST VALUE BASED ON SHIP-TO
         $shippingAddressPrice = $this->getShippingAddressBasedPrice($customer, $currencyCode, $sku, $uom);
@@ -617,8 +617,8 @@ class Sage300 implements PricingSystemInterface
         string $currencyCode,
         string $sku,
         string $customerGroup,
-        string $uom = null,
-        float $qtyOverride = null,
+        ?string $uom,
+        ?float $qtyOverride
     ) {
         $this->log('getVolumeDiscountPrice()', [
             'currencyCode'  => $currencyCode,

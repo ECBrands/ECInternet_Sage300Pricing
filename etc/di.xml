@@ -50,16 +50,6 @@
 		</arguments>
 	</type>
 
-	<!-- Custom Logger -->
-	<type name="ECInternet\Sage300Pricing\Logger\Logger">
-		<arguments>
-			<argument name="name" xsi:type="string">Sage300Pricing</argument>
-			<argument name="handlers" xsi:type="array">
-				<item name="system" xsi:type="object">ECInternet\Sage300Pricing\Logger\Handler</item>
-			</argument>
-		</arguments>
-	</type>
-
 	<!-- Add ICCUPR, ICPRIC, and ICPRICP collections -->
 	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
 		<arguments>

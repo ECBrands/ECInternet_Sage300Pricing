@@ -9,14 +9,14 @@ namespace ECInternet\Sage300Pricing\Logger;
 
 use Magento\Framework\Filesystem\Driver\File as FileDriver;
 use Magento\Framework\Logger\Handler\Base as LoggerHandlerBase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * Logger handler
  */
 class Handler extends LoggerHandlerBase
 {
-    protected $loggerType = Logger::INFO;
+    protected $loggerType = Level::Info;
 
     protected $fileName = '/var/log/ECInternet_Sage300Pricing.log';
 

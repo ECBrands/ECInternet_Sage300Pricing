@@ -16,8 +16,8 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime;
 use ECInternet\Sage300Pricing\Api\Data\IcpricInterface;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory as IcpricpCollection;
+use Psr\Log\LoggerInterface;
 
 /**
  * Icpric data model
@@ -40,14 +40,14 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
     private $dateTime;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
-     */
-    private $logger;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Collection
      */
     private $icpricpCollection;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * Icpric constructor.
@@ -55,26 +55,28 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      * @param \Magento\Framework\Model\Context                                         $context
      * @param \Magento\Framework\Registry                                              $registry
      * @param \Magento\Framework\Stdlib\DateTime                                       $dateTime
-     * @param \ECInternet\Sage300Pricing\Logger\Logger                                 $logger
      * @param \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory $icpricpCollection
+     * @param \Psr\Log\LoggerInterface                                                 $logger
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null             $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null                       $resourceCollection
      * @param array                                                                    $data
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         Context $context,
         Registry $registry,
         DateTime $dateTime,
-        Logger $logger,
         IcpricpCollection $icpricpCollection,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        LoggerInterface $logger,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
 
         $this->dateTime          = $dateTime;
-        $this->logger            = $logger;
         $this->icpricpCollection = $icpricpCollection;
+        $this->logger            = $logger;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -455,7 +457,7 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      *
      * @return float|null
      */
-    public function getVolumeDiscountPrice(float $qty, string $uom = null)
+    public function getVolumeDiscountPrice(float $qty, ?string $uom = null)
     {
         $this->log('getVolumeDiscountPrice()', ['qty' => $qty, 'uom' => $uom]);
 
@@ -479,7 +481,9 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
                     $this->log('getVolumeDiscountPrice()', ['percentage' => $percentage]);
 
                     return $unitPrice * ((100 - $percentage) / 100);
-                } elseif ($this->isDiscountOrMarkupAppliedByAmount()) {
+                }
+
+                if ($this->isDiscountOrMarkupAppliedByAmount()) {
                     $this->log('getVolumeDiscountPrice()', ['appliedBy' => 'amount']);
 
                     $amount = $this->getDiscountMarkupAmount($qtyLevel);
@@ -500,7 +504,7 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      *
      * @return \ECInternet\Sage300Pricing\Model\Data\Icpricp|null
      */
-    public function getDetails(string $uom = null)
+    public function getDetails(?string $uom = null)
     {
         //$this->log('getDetails()', ['uom' => $uom]);
 
@@ -634,7 +638,7 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      *
      * @return float|null
      */
-    public function getUnitPrice(string $uom = null)
+    public function getUnitPrice(?string $uom = null)
     {
         $this->log('getUnitPrice()', ['uom' => $uom]);
 
@@ -655,7 +659,7 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      */
     private function isDiscountOrMarkupAppliedByPercentage()
     {
-        return $this->getDiscountMarkupPriceBy() == self::DISCOUNT_MARKUP_PRICE_BY_PERCENTAGE;
+        return $this->getDiscountMarkupPriceBy() === self::DISCOUNT_MARKUP_PRICE_BY_PERCENTAGE;
     }
 
     /**
@@ -665,7 +669,7 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      */
     private function isDiscountOrMarkupAppliedByAmount()
     {
-        return $this->getDiscountMarkupPriceBy() == self::DISCOUNT_MARKUP_PRICE_BY_AMOUNT;
+        return $this->getDiscountMarkupPriceBy() === self::DISCOUNT_MARKUP_PRICE_BY_AMOUNT;
     }
 
     /**
@@ -690,7 +694,6 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
                 return $this->getDiscountMarkupPercentage5();
             default:
                 $this->notice("getDiscountMarkupPercentage() - Unexpected percentage level: [$index].");
-
                 return 0.0;
         }
     }
@@ -736,8 +739,6 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      */
     private function getDiscountMarkupAmount(int $index)
     {
-        $this->log('getDiscountMarkupAmount()', ['index' => $index]);
-
         switch ($index) {
             case 1:
                 return $this->getDiscountMarkupAmount1();
@@ -778,6 +779,6 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Model/Data/Icpric - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Model/Data/Icpric - ' . $message, $extra);
     }
 }

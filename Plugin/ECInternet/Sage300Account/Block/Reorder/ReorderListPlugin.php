@@ -12,8 +12,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use ECInternet\Sage300Account\Block\Reorder\ReorderList;
 use ECInternet\Sage300Account\Helper\Uom as UomHelper;
-use ECInternet\Sage300Account\Logger\Logger;
 use ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ReorderListPlugin
 {
@@ -30,33 +30,33 @@ class ReorderListPlugin
     private $uomHelper;
 
     /**
-     * @var \ECInternet\Sage300Account\Logger\Logger
-     */
-    private $logger;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface
      */
     private $icpricpRepository;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * ReorderListPlugin constructor.
      *
      * @param \Magento\Store\Model\StoreManagerInterface                $storeManager
      * @param \ECInternet\Sage300Account\Helper\Uom                     $uomHelper
-     * @param \ECInternet\Sage300Account\Logger\Logger                  $logger
      * @param \ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface $icpricpRepository
+     * @param \Psr\Log\LoggerInterface                                  $logger
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         UomHelper $uomHelper,
-        Logger $logger,
-        IcpricpRepositoryInterface $icpricpRepository
+        IcpricpRepositoryInterface $icpricpRepository,
+        LoggerInterface $logger
     ) {
         $this->storeManager      = $storeManager;
         $this->uomHelper         = $uomHelper;
-        $this->logger            = $logger;
         $this->icpricpRepository = $icpricpRepository;
+        $this->logger            = $logger;
     }
 
     public function aroundGetUom(
@@ -152,6 +152,6 @@ class ReorderListPlugin
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Plugin/ECInternet/Sage300Account/Block/Reorder/ReorderListPlugin - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Plugin/ECInternet/Sage300Account/Block/Reorder/ReorderListPlugin - ' . $message, $extra);
     }
 }

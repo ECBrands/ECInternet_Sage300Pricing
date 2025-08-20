@@ -13,11 +13,11 @@ use Magento\Framework\Exception\LocalizedException;
 use ECInternet\Sage300Pricing\Api\Data\IccuprInterface;
 use ECInternet\Sage300Pricing\Api\Data\IccuprSearchResultsInterfaceFactory;
 use ECInternet\Sage300Pricing\Api\IccuprRepositoryInterface;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use ECInternet\Sage300Pricing\Model\Data\Iccupr;
 use ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr as IccuprResource;
 use ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr\CollectionFactory as IccuprCollectionFactory;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * Iccupr model repository
@@ -37,11 +37,6 @@ class IccuprRepository implements IccuprRepositoryInterface
     private $iccuprSearchResultsFactory;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
-     */
-    private $logger;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr
      */
     private $resourceModel;
@@ -52,26 +47,31 @@ class IccuprRepository implements IccuprRepositoryInterface
     private $iccuprCollectionFactory;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * IccuprRepository constructor.
      *
      * @param \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface      $collectionProcessor
      * @param \ECInternet\Sage300Pricing\Api\Data\IccuprSearchResultsInterfaceFactory $iccuprSearchResultsFactory
-     * @param \ECInternet\Sage300Pricing\Logger\Logger                                $logger
      * @param \ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr                   $resourceModel
      * @param \ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr\CollectionFactory $iccuprCollectionFactory
+     * @param \Psr\Log\LoggerInterface                                                $logger
      */
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
         IccuprSearchResultsInterfaceFactory $iccuprSearchResultsFactory,
-        Logger $logger,
         IccuprResource $resourceModel,
-        IccuprCollectionFactory $iccuprCollectionFactory
+        IccuprCollectionFactory $iccuprCollectionFactory,
+        LoggerInterface $logger
     ) {
         $this->collectionProcessor        = $collectionProcessor;
         $this->iccuprSearchResultsFactory = $iccuprSearchResultsFactory;
-        $this->logger                     = $logger;
         $this->resourceModel              = $resourceModel;
         $this->iccuprCollectionFactory    = $iccuprCollectionFactory;
+        $this->logger                     = $logger;
     }
 
     public function save(
@@ -324,6 +324,6 @@ class IccuprRepository implements IccuprRepositoryInterface
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Model/IccuprRepository - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Model/IccuprRepository - ' . $message, $extra);
     }
 }

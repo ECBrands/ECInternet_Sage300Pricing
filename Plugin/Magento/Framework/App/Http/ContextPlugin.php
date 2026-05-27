@@ -59,6 +59,9 @@ class ContextPlugin
 
             $subject->setValue('CONTEXT_CUSTOMER_NUMBER', $customerNumber, 0);
         }
+
+        // If the method does not change the argument for the observed method, it should return a null value
+        return null;
     }
 
     /**

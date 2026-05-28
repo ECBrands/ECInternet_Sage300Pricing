@@ -188,10 +188,12 @@ class Customer extends AbstractHelper
         CustomerInterface $customer
     ) {
         if ($shippingAddressId = $customer->getDefaultShipping()) {
-            try {
-                return $this->addressRepository->getById($shippingAddressId);
-            } catch (LocalizedException $e) {
-                $this->log("getDefaultShippingAddress() - Cannot lookup address [$shippingAddressId] - {$e->getMessage()}");
+            if (is_numeric($shippingAddressId)) {
+                try {
+                    return $this->addressRepository->getById((int)$shippingAddressId);
+                } catch (LocalizedException $e) {
+                    $this->log("getDefaultShippingAddress() - Cannot lookup address [$shippingAddressId] - {$e->getMessage()}");
+                }
             }
         }
 

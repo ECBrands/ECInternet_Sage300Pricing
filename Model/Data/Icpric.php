@@ -81,6 +81,9 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     protected function _construct()
     {
         $this->_init('ECInternet\Sage300Pricing\Model\ResourceModel\Icpric');
@@ -543,19 +546,16 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
 
         if ($collectionCount === 0) {
             $this->notice('getDetails() - No ICPRICP records found.');
-
             return null;
         }
 
         if ($collectionCount > 1) {
             $this->notice('getDetails() - More than one ICPRICP record found.');
-
             return null;
         }
 
         /** @var \ECInternet\Sage300Pricing\Model\Data\Icpricp $icpricp */
         $icpricp = $icpricpCollection->getFirstItem();
-
         if ($icpricp instanceof Icpricp) {
             return $icpricp;
         }

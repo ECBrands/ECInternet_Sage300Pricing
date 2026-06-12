@@ -144,7 +144,7 @@ class UpgradeData implements UpgradeDataInterface
             /** @var \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute */
             $attribute = $customerSetup->getEavConfig()
                 ->getAttribute(Customer::ENTITY, 'currency_code')
-                ->addData([
+                ->setData([
                     'attribute_set_id'   => $attributeSetId,
                     'attribute_group_id' => $attributeGroupId,
                     'used_in_forms'      => [

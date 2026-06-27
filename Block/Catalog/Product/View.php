@@ -22,9 +22,9 @@ use Magento\Framework\Url\EncoderInterface as UrlEncoderInterface;
 use ECInternet\Sage300Account\Helper\Data as Sage300AccountHelper;
 use ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface;
 use ECInternet\Sage300Pricing\Helper\Data;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use ECInternet\Sage300Pricing\Model\Config;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * Catalog Product View Block
@@ -52,14 +52,14 @@ class View extends \Magento\Catalog\Block\Product\View
     private $helper;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
-     */
-    private $logger;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Model\Config
      */
     private $config;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     /**
      * View constructor.
@@ -78,8 +78,8 @@ class View extends \Magento\Catalog\Block\Product\View
      * @param \ECInternet\Sage300Account\Helper\Data                   $sage300AccountHelper
      * @param \ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface $icpricRepository
      * @param \ECInternet\Sage300Pricing\Helper\Data                   $helper
-     * @param \ECInternet\Sage300Pricing\Logger\Logger                 $logger
      * @param \ECInternet\Sage300Pricing\Model\Config                  $config
+     * @param \Psr\Log\LoggerInterface                                 $logger
      * @param array                                                    $data
      */
     public function __construct(
@@ -97,8 +97,8 @@ class View extends \Magento\Catalog\Block\Product\View
         Sage300AccountHelper $sage300AccountHelper,
         IcpricRepositoryInterface $icpricRepository,
         Data $helper,
-        Logger $logger,
         Config $config,
+        LoggerInterface $logger,
         array $data = []
     ) {
         parent::__construct(
@@ -122,8 +122,8 @@ class View extends \Magento\Catalog\Block\Product\View
         $this->sage300AccountHelper = $sage300AccountHelper;
         $this->icpricRepository     = $icpricRepository;
         $this->helper               = $helper;
-        $this->logger               = $logger;
         $this->config               = $config;
+        $this->logger               = $logger;
     }
 
     /**
@@ -155,8 +155,9 @@ class View extends \Magento\Catalog\Block\Product\View
 
             if ($pricingRecord = $this->getPricingRecord($product)) {
                 $tierPriceArray = $pricingRecord->getTierPrices();
+                $tierPriceArrayCount = count($tierPriceArray);
 
-                for ($i = 0; $i < count($tierPriceArray); $i++) {
+                for ($i = 0; $i < $tierPriceArrayCount; $i++) {
                     $tierPrice = $tierPriceArray[$i];
 
                     $percentSavings = $tierPrice['percentage'] ??
@@ -262,6 +263,6 @@ class View extends \Magento\Catalog\Block\Product\View
 
     public function log(string $message, array $extra = [])
     {
-        $this->logger->info('Block/Catalog/Product/View - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Block/Catalog/Product/View - ' . $message, $extra);
     }
 }

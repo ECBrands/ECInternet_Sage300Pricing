@@ -42,13 +42,15 @@ class Icpricp extends AbstractModel implements IdentityInterface, IcpricpInterfa
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
      * @param array                                                        $data
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         Context $context,
         Registry $registry,
         DateTime $dateTime,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->dateTime = $dateTime;
@@ -56,6 +58,9 @@ class Icpricp extends AbstractModel implements IdentityInterface, IcpricpInterfa
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     protected function _construct()
     {
         $this->_init('ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp');

@@ -9,29 +9,29 @@ namespace ECInternet\Sage300Pricing\Api\Data;
 
 interface IcpricpInterface
 {
-    const COLUMN_ID                             = 'entity_id';
+    public const COLUMN_ID                             = 'entity_id';
 
-    const COLUMN_UPDATED_AT                     = 'updated_at';
+    public const COLUMN_UPDATED_AT                     = 'updated_at';
 
-    const COLUMN_IS_ACTIVE                      = 'is_active';
+    public const COLUMN_IS_ACTIVE                      = 'is_active';
 
-    const COLUMN_CURRENCY                       = 'CURRENCY';
+    public const COLUMN_CURRENCY                       = 'CURRENCY';
 
-    const COLUMN_ITEMNO                         = 'ITEMNO';
+    public const COLUMN_ITEMNO                         = 'ITEMNO';
 
-    const COLUMN_PRICELIST                      = 'PRICELIST';
+    public const COLUMN_PRICELIST                      = 'PRICELIST';
 
-    const COLUMN_DPRICETYPE                     = 'DPRICETYPE';
+    public const COLUMN_DPRICETYPE                     = 'DPRICETYPE';
 
-    const COLUMN_QTYUNIT                        = 'QTYUNIT';
+    public const COLUMN_QTYUNIT                        = 'QTYUNIT';
 
-    const COLUMN_WEIGHTUNIT                     = 'WEIGHTUNIT';
+    public const COLUMN_WEIGHTUNIT                     = 'WEIGHTUNIT';
 
-    const COLUMN_UNITPRICE                      = 'UNITPRICE';
+    public const COLUMN_UNITPRICE                      = 'UNITPRICE';
 
-    const COLUMN_CONVERSION                     = 'CONVERSION';
+    public const COLUMN_CONVERSION                     = 'CONVERSION';
 
-    const PRICE_DETAIL_TYPE_BASE_PRICE_QUANTITY = 1;
+    public const PRICE_DETAIL_TYPE_BASE_PRICE_QUANTITY = 1;
 
     /**
      * Get ID

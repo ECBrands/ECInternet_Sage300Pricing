@@ -11,8 +11,8 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use ECInternet\Sage300Pricing\Helper\Customer as CustomerHelper;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
  * Observer for 'customer_login' event
@@ -25,7 +25,7 @@ class CustomerLogin implements ObserverInterface
     private $storeManager;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -33,11 +33,11 @@ class CustomerLogin implements ObserverInterface
      * CustomerLogin constructor.
      *
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \ECInternet\Sage300Pricing\Logger\Logger   $logger
+     * @param \Psr\Log\LoggerInterface                   $logger
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->storeManager = $storeManager;
         $this->logger       = $logger;
@@ -81,6 +81,6 @@ class CustomerLogin implements ObserverInterface
      */
     private function log(string $message)
     {
-        $this->logger->info('Observer/CustomerLogin - ' . $message);
+        $this->logger->info('[ECInternet_Sage300Pricing] Observer/CustomerLogin - ' . $message);
     }
 }

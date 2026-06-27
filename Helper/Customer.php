@@ -15,8 +15,8 @@ use Magento\Customer\Model\SessionFactory as CustomerSessionFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 class Customer extends AbstractHelper
 {
@@ -49,7 +49,7 @@ class Customer extends AbstractHelper
     private $customerSessionFactory;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -59,7 +59,7 @@ class Customer extends AbstractHelper
         CustomerRepositoryInterface $customerRepository,
         GroupRepositoryInterface $groupRepository,
         CustomerSessionFactory $customerSessionFactory,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
 
@@ -188,10 +188,12 @@ class Customer extends AbstractHelper
         CustomerInterface $customer
     ) {
         if ($shippingAddressId = $customer->getDefaultShipping()) {
-            try {
-                return $this->addressRepository->getById($shippingAddressId);
-            } catch (LocalizedException $e) {
-                $this->log("getDefaultShippingAddress() - Cannot lookup address [$shippingAddressId] - {$e->getMessage()}");
+            if (is_numeric($shippingAddressId)) {
+                try {
+                    return $this->addressRepository->getById((int)$shippingAddressId);
+                } catch (LocalizedException $e) {
+                    $this->log("getDefaultShippingAddress() - Cannot lookup address [$shippingAddressId] - {$e->getMessage()}");
+                }
             }
         }
 
@@ -300,6 +302,6 @@ class Customer extends AbstractHelper
 
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Helper/Customer - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Helper/Customer - ' . $message, $extra);
     }
 }

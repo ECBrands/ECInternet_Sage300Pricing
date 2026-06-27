@@ -10,12 +10,10 @@ namespace ECInternet\Sage300Pricing\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\StoreManagerInterface;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
- * Helper
- *
  * @SuppressWarnings(PHPMD.LongVariable)
  */
 class Data extends AbstractHelper
@@ -26,7 +24,7 @@ class Data extends AbstractHelper
     private $storeManager;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -35,12 +33,12 @@ class Data extends AbstractHelper
      *
      * @param \Magento\Framework\App\Helper\Context      $context
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \ECInternet\Sage300Pricing\Logger\Logger   $logger
+     * @param \Psr\Log\LoggerInterface                   $logger
      */
     public function __construct(
         Context $context,
         StoreManagerInterface $storeManager,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
 
@@ -66,6 +64,6 @@ class Data extends AbstractHelper
 
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Helper/Data - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Helper/Data - ' . $message, $extra);
     }
 }

@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace ECInternet\Sage300Pricing\Model\Data;
 
-use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -43,13 +43,15 @@ class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
      * @param array                                                        $data
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         Context $context,
         Registry $registry,
         DateTime $dateTime,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->dateTime = $dateTime;
@@ -57,6 +59,9 @@ class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     protected function _construct()
     {
         $this->_init('ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr');
@@ -226,7 +231,7 @@ class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
         }
 
         // Expiration date is not zero (meaning it's set) and it's today or in the past --> Invalid
-        if ($this->getExpirationDate() <> 0 && $this->getExpirationDate() <= $today) {
+        if ($this->getExpirationDate() != '0' && $this->getExpirationDate() <= $today) {
             return false;
         }
 

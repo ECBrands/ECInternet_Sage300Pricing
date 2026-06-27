@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- afterGetCacheKeyInfo() - Add customerId to cache key array -->
     <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
-        <plugin name="sage300pricing-configurable-block-plugin"
+        <plugin name="ecinternet_sage300pricing-magento_configurableproduct_block_product_view_type_configurable"
                 type="ECInternet\Sage300Pricing\Plugin\Magento\ConfigurableProduct\Block\Product\View\Type\ConfigurablePlugin" />
     </type>
 </config>

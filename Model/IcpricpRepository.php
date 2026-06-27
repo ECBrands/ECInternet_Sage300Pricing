@@ -13,14 +13,14 @@ use Magento\Framework\Exception\LocalizedException;
 use ECInternet\Sage300Pricing\Api\Data\IcpricpInterface;
 use ECInternet\Sage300Pricing\Api\Data\IcpricpSearchResultsInterfaceFactory;
 use ECInternet\Sage300Pricing\Api\IcpricpRepositoryInterface;
-use ECInternet\Sage300Pricing\Logger\Logger;
 use ECInternet\Sage300Pricing\Model\Data\Icpricp;
 use ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp as IcpricpResource;
 use ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory as IcpricpCollectionFactory;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 /**
- * Icpricp model repository
+ * ICPRICP model repository
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  */
@@ -37,11 +37,6 @@ class IcpricpRepository implements IcpricpRepositoryInterface
     private $icpricpSearchResultsFactory;
 
     /**
-     * @var \ECInternet\Sage300Pricing\Logger\Logger
-     */
-    private $logger;
-
-    /**
      * @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp
      */
     private $resourceModel;
@@ -52,26 +47,31 @@ class IcpricpRepository implements IcpricpRepositoryInterface
     private $icpricpCollectionFactory;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * IcpricpRepository constructor.
      *
      * @param \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface       $collectionProcessor
      * @param \ECInternet\Sage300Pricing\Api\Data\IcpricpSearchResultsInterfaceFactory $icpricpSearchResultsFactory
-     * @param \ECInternet\Sage300Pricing\Logger\Logger                                 $logger
      * @param \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp                   $resourceModel
      * @param \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory $icpricpCollectionFactory
+     * @param \Psr\Log\LoggerInterface                                                 $logger
      */
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
         IcpricpSearchResultsInterfaceFactory $icpricpSearchResultsFactory,
-        Logger $logger,
         IcpricpResource $resourceModel,
-        IcpricpCollectionFactory $icpricpCollectionFactory
+        IcpricpCollectionFactory $icpricpCollectionFactory,
+        LoggerInterface $logger
     ) {
         $this->collectionProcessor         = $collectionProcessor;
         $this->icpricpSearchResultsFactory = $icpricpSearchResultsFactory;
-        $this->logger                      = $logger;
         $this->resourceModel               = $resourceModel;
         $this->icpricpCollectionFactory    = $icpricpCollectionFactory;
+        $this->logger                      = $logger;
     }
 
     public function save(
@@ -364,6 +364,6 @@ class IcpricpRepository implements IcpricpRepositoryInterface
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('Model/IcpricpRepository - ' . $message, $extra);
+        $this->logger->info('[ECInternet_Sage300Pricing] Model/IcpricpRepository - ' . $message, $extra);
     }
 }

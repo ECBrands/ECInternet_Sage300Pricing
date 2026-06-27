@@ -9,47 +9,47 @@ namespace ECInternet\Sage300Pricing\Api\Data;
 
 interface IccuprInterface
 {
-    const COLUMN_ID                         = 'entity_id';
+    public const COLUMN_ID                         = 'entity_id';
 
-    const COLUMN_UPDATED_AT                 = 'updated_at';
+    public const COLUMN_UPDATED_AT                 = 'updated_at';
 
-    const COLUMN_IS_ACTIVE                  = 'is_active';
+    public const COLUMN_IS_ACTIVE                  = 'is_active';
 
-    const COLUMN_CUSTNO                     = 'CUSTNO';
+    public const COLUMN_CUSTNO                     = 'CUSTNO';
 
-    const COLUMN_ITEMNO                     = 'ITEMNO';
+    public const COLUMN_ITEMNO                     = 'ITEMNO';
 
-    const COLUMN_PRICELIST                  = 'PRICELIST';
+    public const COLUMN_PRICELIST                  = 'PRICELIST';
 
-    const COLUMN_EXPIRE                     = 'EXPIRE';
+    public const COLUMN_EXPIRE                     = 'EXPIRE';
 
-    const COLUMN_PRICETYPE                  = 'PRICETYPE';
+    public const COLUMN_PRICETYPE                  = 'PRICETYPE';
 
-    const COLUMN_CUSTTYPE                   = 'CUSTTYPE';
+    public const COLUMN_CUSTTYPE                   = 'CUSTTYPE';
 
-    const COLUMN_DISCPER                    = 'DISCPER';
+    public const COLUMN_DISCPER                    = 'DISCPER';
 
-    const COLUMN_DISCAMT                    = 'DISCAMT';
+    public const COLUMN_DISCAMT                    = 'DISCAMT';
 
-    const COLUMN_PLUSAMT                    = 'PLUSAMT';
+    public const COLUMN_PLUSAMT                    = 'PLUSAMT';
 
-    const COLUMN_PLUSPER                    = 'PLUSPER';
+    public const COLUMN_PLUSPER                    = 'PLUSPER';
 
-    const COLUMN_FIXPRICE                   = 'FIXPRICE';
+    public const COLUMN_FIXPRICE                   = 'FIXPRICE';
 
-    const COLUMN_STARTDATE                  = 'STARTDATE';
+    public const COLUMN_STARTDATE                  = 'STARTDATE';
 
-    const PRICE_TYPE_CUSTOMER_TYPE          = 1;
+    public const PRICE_TYPE_CUSTOMER_TYPE          = 1;
 
-    const PRICE_TYPE_DISCOUNT_PERCENTAGE    = 2;
+    public const PRICE_TYPE_DISCOUNT_PERCENTAGE    = 2;
 
-    const PRICE_TYPE_DISCOUNT_AMOUNT        = 3;
+    public const PRICE_TYPE_DISCOUNT_AMOUNT        = 3;
 
-    const PRICE_TYPE_COST_PLUS_A_PERCENTAGE = 4;
+    public const PRICE_TYPE_COST_PLUS_A_PERCENTAGE = 4;
 
-    const PRICE_TYPE_COST_PLUS_FIXED_AMOUNT = 5;
+    public const PRICE_TYPE_COST_PLUS_FIXED_AMOUNT = 5;
 
-    const PRICE_TYPE_FIXED_PRICE            = 6;
+    public const PRICE_TYPE_FIXED_PRICE            = 6;
 
     /**
      * Get ID

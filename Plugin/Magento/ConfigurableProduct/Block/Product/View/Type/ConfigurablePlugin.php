@@ -28,6 +28,9 @@ class ConfigurablePlugin
      * @param array                                                             $result
      *
      * @return array
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetCacheKeyInfo(Configurable $subject, array $result): array
     {

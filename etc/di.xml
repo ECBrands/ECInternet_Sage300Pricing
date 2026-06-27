@@ -27,18 +27,14 @@
 
 	<!-- beforeGetVaryString() - Add 'customer_number' for unique identifier -->
 	<type name="Magento\Framework\App\Http\Context">
-		<plugin name="ecinternet_sage300pricing-magento_framework_app_http_context_plugin"
-		        type="ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http\ContextPlugin"
-		        disabled="false"
-		/>
+		<plugin name="ecinternet_sage300pricing-magento_framework_app_http_context"
+		        type="ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http\ContextPlugin" />
 	</type>
 
 	<!-- aroundGetUom() - Get "better" uom if we have pricing tables -->
 	<type name="ECInternet\Sage300Account\Block\Reorder\ReorderList">
-		<plugin name="ecinternet_sage300pricing-sage300account_block_reorder_reorderlist_plugin"
-		        type="ECInternet\Sage300Pricing\Plugin\ECInternet\Sage300Account\Block\Reorder\ReorderListPlugin"
-		        disabled="false"
-		/>
+		<plugin name="ecinternet_sage300pricing-ecinternet_sage300account_block_reorder_reorderlist"
+		        type="ECInternet\Sage300Pricing\Plugin\ECInternet\Sage300Account\Block\Reorder\ReorderListPlugin" />
 	</type>
 
 	<!-- Add sage300pricing to pool -->
@@ -49,6 +45,29 @@
 			</argument>
 		</arguments>
 	</type>
+
+    <!-- Add Logger to ContextPlugin -->
+	<type name="ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http\ContextPlugin">
+		<arguments>
+			<argument name="logger" xsi:type="object">ECInternetSage300PricingLogger</argument>
+		</arguments>
+	</type>
+
+    <!-- Add Logger to ReorderListPlugin -->
+	<type name="ECInternet\Sage300Pricing\Plugin\ECInternet\Sage300Account\Block\Reorder\ReorderListPlugin">
+		<arguments>
+			<argument name="logger" xsi:type="object">ECInternetSage300PricingLogger</argument>
+		</arguments>
+	</type>
+
+	<!-- Custom Logger - Must be injected into each class which needs it -->
+	<virtualType name="ECInternetSage300PricingLogger" type="Magento\Framework\Logger\Monolog">
+		<arguments>
+			<argument name="handlers" xsi:type="array">
+				<item name="info" xsi:type="object">ECInternet\Sage300Pricing\Logger\Handler</item>
+			</argument>
+		</arguments>
+	</virtualType>
 
 	<!-- Add ICCUPR, ICPRIC, and ICPRICP collections -->
 	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">

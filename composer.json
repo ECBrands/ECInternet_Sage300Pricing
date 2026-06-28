@@ -4,7 +4,8 @@
 	"require": {
 		"php": "~8.3.0||~8.4.0",
 		"ext-json": "*",
-		"ecinternet/base": "2.4.8.x-dev"
+		"ecinternet/base": "2.4.8.x-dev",
+		"ecinternet/pricing": "2.4.8.x-dev"
 	},
 	"type": "magento2-module",
 	"version": "2.0.0.0",

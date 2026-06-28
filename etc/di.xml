@@ -73,27 +73,27 @@
 	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
 		<arguments>
 			<argument name="collections" xsi:type="array">
-				<item name="iccupr_listing_data_source" xsi:type="string">IccuprCollection</item>
-				<item name="icpric_listing_data_source" xsi:type="string">IcpricCollection</item>
-				<item name="icpricp_listing_data_source" xsi:type="string">IcpricpCollection</item>
+				<item name="iccupr_listing_data_source" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr\Grid\Collection</item>
+				<item name="icpric_listing_data_source" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Icpric\Grid\Collection</item>
+				<item name="icpricp_listing_data_source" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Grid\Collection</item>
 			</argument>
 		</arguments>
 	</type>
-	<virtualType name="IccuprCollection"
+	<virtualType name="ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr\Grid\Collection"
 	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
 		<arguments>
 			<argument name="mainTable" xsi:type="string">ecinternet_sage300pricing_iccupr</argument>
 			<argument name="resourceModel" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr</argument>
 		</arguments>
 	</virtualType>
-	<virtualType name="IcpricCollection"
+	<virtualType name="ECInternet\Sage300Pricing\Model\ResourceModel\Icpric\Grid\Collection"
 	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
 		<arguments>
 			<argument name="mainTable" xsi:type="string">ecinternet_sage300pricing_icpric</argument>
 			<argument name="resourceModel" xsi:type="string">ECInternet\Sage300Pricing\Model\ResourceModel\Icpric</argument>
 		</arguments>
 	</virtualType>
-	<virtualType name="IcpricpCollection"
+	<virtualType name="ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Grid\Collection"
 	             type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
 		<arguments>
 			<argument name="mainTable" xsi:type="string">ecinternet_sage300pricing_icpricp</argument>

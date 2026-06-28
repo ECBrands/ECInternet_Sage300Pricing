@@ -45,8 +45,10 @@ class AdminPlugin
      * @param string                        $separator
      *
      * @return string
+     *
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterDisplayPrices(
         Admin $admin,

@@ -15,6 +15,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Plugin for Magento\Framework\App\Http\Context
+ *
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class ContextPlugin
 {

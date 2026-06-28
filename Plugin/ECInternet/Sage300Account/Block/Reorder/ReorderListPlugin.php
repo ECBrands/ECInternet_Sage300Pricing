@@ -59,8 +59,18 @@ class ReorderListPlugin
         $this->logger            = $logger;
     }
 
+    /**
+     * @param \ECInternet\Sage300Account\Block\Reorder\ReorderList $subject
+     * @param callable                                             $proceed
+     * @param \Magento\Catalog\Model\Product                       $product
+     *
+     * @return string
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function aroundGetUom(
-        /** @noinspection PhpUnusedParameterInspection */ ReorderList $subject,
+        ReorderList $subject,
         callable $proceed,
         Product $product
     ) {
@@ -123,6 +133,8 @@ class ReorderListPlugin
      * @param \Magento\Catalog\Model\Product $product
      *
      * @return string|null
+     *
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     private function getPriceListCode(
         Product $product

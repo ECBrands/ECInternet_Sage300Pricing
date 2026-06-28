@@ -27,8 +27,10 @@ class AbstractItemsPlugin
      *
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
+     *
      * @noinspection PhpMissingParamTypeInspection
      * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterDisplayRoundedPrices(
         AbstractItems $subject,

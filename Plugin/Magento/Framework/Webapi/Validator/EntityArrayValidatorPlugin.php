@@ -26,9 +26,12 @@ class EntityArrayValidatorPlugin
      * @param array                $items
      *
      * @return void
+     *
+     * @noinspection PhpUnusedParameterInspection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundValidateComplexArrayType(
-        /* @noinspection PhpUnusedParameterInspection */ EntityArrayValidator $subject,
+        EntityArrayValidator $subject,
         callable $proceed,
         string $className,
         array $items

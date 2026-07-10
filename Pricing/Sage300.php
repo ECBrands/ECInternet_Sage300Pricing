@@ -315,7 +315,7 @@ class Sage300 implements PricingSystemInterface
             : null;
 
         // CUSTOMER TYPE PRICING - Check ICPRIC record for PRICEBASE == 1
-        $customerTypePrice = $this->getCustomerTypePrice($customer, $currencyCode, $sku, $customerGroup, $uom);
+        $customerTypePrice = $this->getCustomerTypePrice($customer, $currencyCode, $sku, $customerGroup);
 
         // TIER PRICE - Check ICPRIC record for PRICEBASE == 2
         $volumeDiscountPrice = $this->getVolumeDiscountPrice($currencyCode, $sku, $customerGroup, $uom, $qtyOverride);
@@ -556,7 +556,6 @@ class Sage300 implements PricingSystemInterface
      * @param string                                       $currencyCode
      * @param string                                       $sku
      * @param string                                       $customerGroup
-     * @param string                                       $uom
      *
      * @return float|null
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -566,13 +565,11 @@ class Sage300 implements PricingSystemInterface
         string $currencyCode,
         string $sku,
         string $customerGroup,
-        string $uom
     ) {
         $this->log('getCustomerTypePrice()', [
             'currencyCode'  => $currencyCode,
             'sku'           => $sku,
             'customerGroup' => $customerGroup,
-            'uom'           => $uom
         ]);
 
         // We need active ICPRIC record to look for customer's 'customer_type' index.

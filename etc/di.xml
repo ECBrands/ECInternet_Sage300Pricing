@@ -46,28 +46,15 @@
 		</arguments>
 	</type>
 
-    <!-- Add Logger to ContextPlugin -->
-	<type name="ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http\ContextPlugin">
+	<!-- Custom Logger -->
+	<type name="ECInternet\Sage300Pricing\Logger\Logger">
 		<arguments>
-			<argument name="logger" xsi:type="object">ECInternetSage300PricingLogger</argument>
-		</arguments>
-	</type>
-
-    <!-- Add Logger to ReorderListPlugin -->
-	<type name="ECInternet\Sage300Pricing\Plugin\ECInternet\Sage300Account\Block\Reorder\ReorderListPlugin">
-		<arguments>
-			<argument name="logger" xsi:type="object">ECInternetSage300PricingLogger</argument>
-		</arguments>
-	</type>
-
-	<!-- Custom Logger - Must be injected into each class which needs it -->
-	<virtualType name="ECInternetSage300PricingLogger" type="Magento\Framework\Logger\Monolog">
-		<arguments>
+			<argument name="name" xsi:type="string">Sage300Pricing</argument>
 			<argument name="handlers" xsi:type="array">
-				<item name="info" xsi:type="object">ECInternet\Sage300Pricing\Logger\Handler</item>
+				<item name="system" xsi:type="object">ECInternet\Sage300Pricing\Logger\Handler</item>
 			</argument>
 		</arguments>
-	</virtualType>
+	</type>
 
 	<!-- Add ICCUPR, ICPRIC, and ICPRICP collections -->
 	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">

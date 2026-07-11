@@ -17,10 +17,10 @@ use ECInternet\Sage300Pricing\Api\IcpricRepositoryInterface;
 use ECInternet\Sage300Pricing\Helper\Customer as CustomerHelper;
 use ECInternet\Sage300Pricing\Helper\Data;
 use ECInternet\Sage300Pricing\Helper\Quote as QuoteHelper;
+use ECInternet\Sage300Pricing\Logger\Logger;
 use ECInternet\Sage300Pricing\Model\Config;
 use ECInternet\Sage300Pricing\Model\Data\Iccupr;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 class Sage300 implements PricingSystemInterface
 {
@@ -57,14 +57,14 @@ class Sage300 implements PricingSystemInterface
     private $quoteHelper;
 
     /**
+     * @var \ECInternet\Sage300Pricing\Logger\Logger
+     */
+    private $logger;
+
+    /**
      * @var \ECInternet\Sage300Pricing\Model\Config
      */
     private $config;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
 
     /**
      * Sage300 constructor.
@@ -75,7 +75,7 @@ class Sage300 implements PricingSystemInterface
      * @param \ECInternet\Sage300Pricing\Helper\Customer               $customerHelper
      * @param \ECInternet\Sage300Pricing\Helper\Data                   $helper
      * @param \ECInternet\Sage300Pricing\Helper\Quote                  $quoteHelper
-     * @param \Psr\Log\LoggerInterface                                 $logger
+     * @param \ECInternet\Sage300Pricing\Logger\Logger                 $logger
      * @param \ECInternet\Sage300Pricing\Model\Config                  $config
      */
     public function __construct(
@@ -85,7 +85,7 @@ class Sage300 implements PricingSystemInterface
         CustomerHelper $customerHelper,
         Data $helper,
         QuoteHelper $quoteHelper,
-        LoggerInterface $logger,
+        Logger $logger,
         Config $config
     ) {
         $this->uomHelper        = $uomHelper;
@@ -94,8 +94,8 @@ class Sage300 implements PricingSystemInterface
         $this->customerHelper   = $customerHelper;
         $this->helper           = $helper;
         $this->quoteHelper      = $quoteHelper;
-        $this->config           = $config;
         $this->logger           = $logger;
+        $this->config           = $config;
     }
 
     public function getName()
@@ -860,6 +860,6 @@ class Sage300 implements PricingSystemInterface
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('[ECInternet_Sage300Pricing] Pricing/Sage300 - ' . $message, $extra);
+        $this->logger->info('Pricing/Sage300 - ' . $message, $extra);
     }
 }

@@ -11,8 +11,8 @@ use Magento\Backend\Model\Session\Quote as QuoteSession;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 class Quote extends AbstractHelper
 {
@@ -27,7 +27,7 @@ class Quote extends AbstractHelper
     private $checkoutSession;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \ECInternet\Sage300Pricing\Logger\Logger
      */
     private $logger;
 
@@ -35,7 +35,7 @@ class Quote extends AbstractHelper
         Context $context,
         QuoteSession $quoteSession,
         CheckoutSession $checkoutSession,
-        LoggerInterface $logger
+        Logger $logger
     ) {
         parent::__construct($context);
 
@@ -132,6 +132,6 @@ class Quote extends AbstractHelper
 
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('[ECInternet_Sage300Pricing] Helper/Quote - ' . $message, $extra);
+        $this->logger->info('Helper/Quote - ' . $message, $extra);
     }
 }

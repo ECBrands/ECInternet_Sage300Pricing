@@ -16,8 +16,8 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime;
 use ECInternet\Sage300Pricing\Api\Data\IcpricInterface;
+use ECInternet\Sage300Pricing\Logger\Logger;
 use ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory as IcpricpCollection;
-use Psr\Log\LoggerInterface;
 
 /**
  * Icpric data model
@@ -40,14 +40,14 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
     private $dateTime;
 
     /**
+     * @var \ECInternet\Sage300Pricing\Logger\Logger
+     */
+    private $logger;
+
+    /**
      * @var \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\Collection
      */
     private $icpricpCollection;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
 
     /**
      * Icpric constructor.
@@ -55,8 +55,8 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      * @param \Magento\Framework\Model\Context                                         $context
      * @param \Magento\Framework\Registry                                              $registry
      * @param \Magento\Framework\Stdlib\DateTime                                       $dateTime
+     * @param \ECInternet\Sage300Pricing\Logger\Logger                                 $logger
      * @param \ECInternet\Sage300Pricing\Model\ResourceModel\Icpricp\CollectionFactory $icpricpCollection
-     * @param \Psr\Log\LoggerInterface                                                 $logger
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null             $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null                       $resourceCollection
      * @param array                                                                    $data
@@ -65,16 +65,16 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
         Context $context,
         Registry $registry,
         DateTime $dateTime,
+        Logger $logger,
         IcpricpCollection $icpricpCollection,
-        LoggerInterface $logger,
         ?AbstractResource $resource = null,
         ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
 
         $this->dateTime          = $dateTime;
-        $this->icpricpCollection = $icpricpCollection;
         $this->logger            = $logger;
+        $this->icpricpCollection = $icpricpCollection;
 
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
@@ -774,6 +774,6 @@ class Icpric extends AbstractModel implements IdentityInterface, IcpricInterface
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('[ECInternet_Sage300Pricing] Model/Data/Icpric - ' . $message, $extra);
+        $this->logger->info('Model/Data/Icpric - ' . $message, $extra);
     }
 }

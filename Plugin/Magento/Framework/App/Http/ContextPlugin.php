@@ -10,8 +10,8 @@ namespace ECInternet\Sage300Pricing\Plugin\Magento\Framework\App\Http;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\SessionFactory as CustomerSessionFactory;
 use Magento\Framework\App\Http\Context;
+use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  * Plugin for Magento\Framework\App\Http\Context
@@ -31,7 +31,7 @@ class ContextPlugin
     private $customerSessionFactory;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \ECInternet\Sage300Pricing\Logger\Logger
      */
     private $logger;
 
@@ -40,12 +40,12 @@ class ContextPlugin
      *
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Customer\Model\SessionFactory            $customerSessionFactory
-     * @param \Psr\Log\LoggerInterface                          $logger
+     * @param \ECInternet\Sage300Pricing\Logger\Logger          $logger
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         CustomerSessionFactory $customerSessionFactory,
-        LoggerInterface $logger
+        Logger $logger
     ) {
         $this->customerRepository     = $customerRepository;
         $this->customerSessionFactory = $customerSessionFactory;
@@ -111,6 +111,6 @@ class ContextPlugin
      */
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('[ECInternet_Sage300Pricing] Plugin/Magento/Framework/App/Http/ContextPlugin - ' . $message, $extra);
+        $this->logger->info('Plugin/Magento/Framework/App/Http/ContextPlugin - ' . $message, $extra);
     }
 }

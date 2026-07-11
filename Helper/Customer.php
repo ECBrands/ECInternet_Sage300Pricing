@@ -15,8 +15,8 @@ use Magento\Customer\Model\SessionFactory as CustomerSessionFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
+use ECInternet\Sage300Pricing\Logger\Logger;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 class Customer extends AbstractHelper
 {
@@ -49,7 +49,7 @@ class Customer extends AbstractHelper
     private $customerSessionFactory;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \ECInternet\Sage300Pricing\Logger\Logger
      */
     private $logger;
 
@@ -59,7 +59,7 @@ class Customer extends AbstractHelper
         CustomerRepositoryInterface $customerRepository,
         GroupRepositoryInterface $groupRepository,
         CustomerSessionFactory $customerSessionFactory,
-        LoggerInterface $logger
+        Logger $logger
     ) {
         parent::__construct($context);
 
@@ -302,6 +302,6 @@ class Customer extends AbstractHelper
 
     private function log(string $message, array $extra = [])
     {
-        $this->logger->info('[ECInternet_Sage300Pricing] Helper/Customer - ' . $message, $extra);
+        $this->logger->info('Helper/Customer - ' . $message, $extra);
     }
 }

@@ -614,8 +614,8 @@ class Sage300 implements PricingSystemInterface
         string $currencyCode,
         string $sku,
         string $customerGroup,
-        ?string $uom,
-        ?float $qtyOverride
+        ?string $uom = null,
+        ?float $qtyOverride = null
     ) {
         $this->log('getVolumeDiscountPrice()', [
             'currencyCode'  => $currencyCode,
@@ -709,11 +709,19 @@ class Sage300 implements PricingSystemInterface
         return $pricingDetailRecord->getUnitPrice();
     }
 
+    /**
+     * @param string      $currencyCode
+     * @param string      $sku
+     * @param string      $customerGroup
+     * @param string|null $uom
+     *
+     * @return float|null
+     */
     private function getCustomerGroupPrice(
         string $currencyCode,
         string $sku,
         string $customerGroup,
-        string $uom
+        ?string $uom = null
     ) {
         $this->log('getCustomerGroupPrice()', [
             'currencyCode'  => $currencyCode,

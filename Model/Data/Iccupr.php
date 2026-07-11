@@ -43,8 +43,6 @@ class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
      * @param array                                                        $data
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         Context $context,
@@ -59,12 +57,9 @@ class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
-    /**
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
     protected function _construct()
     {
-        $this->_init('ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr');
+        $this->_init(\ECInternet\Sage300Pricing\Model\ResourceModel\Iccupr::class);
     }
 
     public function beforeSave()

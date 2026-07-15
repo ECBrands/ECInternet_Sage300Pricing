@@ -24,6 +24,8 @@ class Collection extends AbstractCollection
      * Define resource model
      *
      * @return void
+     *
+     * @noinspection MagicMethodsValidityInspection
      */
     protected function _construct()
     {

@@ -60,6 +60,8 @@ class Icpricp extends AbstractModel implements IdentityInterface, IcpricpInterfa
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @noinspection MagicMethodsValidityInspection
      */
     protected function _construct()
     {

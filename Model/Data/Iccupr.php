@@ -61,6 +61,8 @@ class Iccupr extends AbstractModel implements IdentityInterface, IccuprInterface
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @noinspection MagicMethodsValidityInspection
      */
     protected function _construct()
     {
